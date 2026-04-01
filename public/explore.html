@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GeoHop AI Explore</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+
+<div class="app-container">
+  <header class="header">
+    <h1>🔍 AI Travel Explorer</h1>
+  </header>
+
+  <div style="padding:20px;">
+    <input id="queryInput" placeholder="e.g. most beautiful islands in the world" style="width:60%; padding:10px;" />
+    <button id="searchBtn" class="btn btn-primary">Search</button>
+  </div>
+
+  <div id="results"></div>
+
+  <!-- reuse your existing map -->
+  <gmp-map-3d id="map3d" center="20,-10,15000000"></gmp-map-3d>
+
+</div>
+<button id="addToJourneyBtn" class="btn btn-primary">
+  Add to Journey ✈️
+</button>
+<script src="./explore.js"></script>
+
+<script async
+src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY&libraries=maps3d,marker,geometry">
+</script>
+
+</body>
+</html>
