@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoHop - Your 3D Travel Journey</title>
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">🌍</span>
+                <h1>GeoHop</h1>
+            </div>
+            <div class="user-info">
+                <span id="userName">My Journey</span>
+                <button class="btn-icon" id="viewModeBtn" title="Toggle View">🌐</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-layout">
+            <!-- Sidebar -->
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-content">
+                    <!-- Add Hop Form -->
+                    <div class="add-hop-section">
+                        <h3>📍 Add New Hop</h3>
+                        <form id="addHopForm">
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="text" id="city" placeholder="e.g., Paris" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="country">Country</label>
+                                <input type="text" id="country" placeholder="e.g., France" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="date">Date</label>
+                                <input type="date" id="date" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <textarea id="description" rows="3" placeholder="What did you do there?"></textarea>
+                            </div>
+                            <!-- <label>Photos (optional, max 5)</label>
+                                 <input
+                                     type="file"
+                                        id="photos"
+                                    accept="image/*"
+                                         multiple /> -->
+                            <button type="submit" class="btn btn-primary">Add Hop</button>
+                        </form>
+                    </div>
+
+                    <!-- Journey Stats -->
+                    <div class="stats-card">
+                        <h3>📊 Journey Stats</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-value" id="totalHops">0</div>
+                                <div class="stat-label">Hops</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="totalCountries">0</div>
+                                <div class="stat-label">Countries</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="totalDistance">0</div>
+                                <div class="stat-label">km traveled</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hops List -->
+                    <div class="hops-section">
+                        <div class="section-header">
+                            <h3>🗺️ Your Hops</h3>
+                            <button class="btn-small" id="shareBtn">Share</button>
+                        </div>
+                        <div id="hopsList" class="hops-list"></div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- 3D Map Container -->
+            <main class="map-container">
+                <gmp-map-3d 
+                    id="map3d"
+                    center="20,-10,15000000" 
+                    tilt="0" 
+                    heading="0"
+                    range="15000000"
+                    mode="satellite">
+                </gmp-map-3d>
+
+                <!-- Map Controls -->
+                <div class="map-controls">
+                    <div class="control-group">
+                        <button class="control-btn" id="playBtn" title="Play Journey">
+                            <span class="icon">▶</span>
+                            <span class="label">Play</span>
+                        </button>
+                        <button class="control-btn" id="pauseBtn" title="Pause" disabled>
+                            <span class="icon">⏸</span>
+                            <span class="label">Pause</span>
+                        </button>
+                        <button class="control-btn" id="resetBtn" title="Reset">
+                            <span class="icon">⏮</span>
+                            <span class="label">Reset</span>
+                        </button>
+                    </div>
+                    <div class="control-group">
+                        <button class="control-btn" id="rotateBtn" title="Auto Rotate">
+                            <span class="icon">🔄</span>
+                            <span class="label">Rotate</span>
+                        </button>
+                        <button class="control-btn" id="speedBtn" title="Speed">
+                            <span class="icon">⚡</span>
+                            <span class="label">1x</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Toggle Sidebar Button -->
+                <button class="toggle-sidebar" id="toggleSidebar">
+                    <span>☰</span>
+                </button>
+            </main>
+        </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div class="modal" id="shareModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Share Your Journey</h2>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Share your travel journey with friends and family:</p>
+                <div class="share-link-container">
+                    <input type="text" id="shareLink" readonly class="share-link">
+                    <button class="btn btn-copy" id="copyBtn">Copy</button>
+                </div>
+                <div class="share-options">
+                    <button class="share-btn" id="shareWhatsApp">WhatsApp</button>
+                    <button class="share-btn" id="shareTwitter">Twitter</button>
+                    <button class="share-btn" id="shareFacebook">Facebook</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <p>Loading your journey...</p>
+    </div>
+
+    <div id="photoViewer" class="photo-viewer hidden">
+  <div class="photo-track" id="photoTrack"></div>
+  <button class="photo-close" id="closePhotos">×</button>
+</div>
+
+
+    <script async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBft3sI8GFrO_Mv55elA0t7zZf73EwN2bI&v=beta&libraries=maps3d,marker,geometry"></script>
+    <script src="./app.js"></script>
+</body>
+</html>
