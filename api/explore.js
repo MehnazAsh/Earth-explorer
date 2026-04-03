@@ -3,7 +3,7 @@ export default async function handler(req, res) {
     console.log("🔥 API HIT");
 
     const { query } = req.body || {};
-
+console.error("❌ failed to get request:", "Mehnaz1");
     if (!query) {
       return res.status(400).json({ error: "Query is required" });
     }
@@ -46,7 +46,7 @@ Return ONLY JSON in this format:
     );
 
     const genData = await genResponse.json();
-console.error("❌ JSON extraction failed:", genData);
+console.error("❌ Mehnaz:", genData);
     let rawText =
       genData?.candidates?.[0]?.content?.parts?.[0]?.text || "";
 
