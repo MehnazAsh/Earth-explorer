@@ -4,9 +4,9 @@
 function extractJSON(text) {
   try {
     text = text.replace(/```json|```/g, "").trim();
-
+console.log("text extracted");
     const match = text.match(/\[[\s\S]*\]/);
-
+console.log("text matched");
     if (match) {
       return JSON.parse(match[0]);
     }
