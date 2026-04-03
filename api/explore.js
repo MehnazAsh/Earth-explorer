@@ -3,6 +3,7 @@
 // -------------------------------
 function extractJSON(text) {
   try {
+    console.log("inside extractJSON function");
     text = text.replace(/```json|```/g, "").trim();
 console.log("text extracted");
     const match = text.match(/\[[\s\S]*\]/);
@@ -81,7 +82,7 @@ Query: ${query}
     console.log("🧠 Raw Gemini:", rawText);
 
     const places = extractJSON(rawText);
-console.error("Failed to extract");
+console.error("ExtractJSON called but Failed to extract");
     if (!places) {
       console.warn("⚠️ Using fallback (generation failed)");
       return res.status(200).json([
