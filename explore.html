@@ -19,7 +19,15 @@
   <div id="results"></div>
 
   <!-- reuse your existing map -->
-  <gmp-map-3d id="map3d" center="20,-10,15000000"></gmp-map-3d>
+   <main class="map-container">
+                <gmp-map-3d 
+                    id="map3d"
+                    center="20,-10,15000000" 
+                    tilt="0" 
+                    heading="0"
+                    range="15000000"
+                    mode="satellite">
+                </gmp-map-3d>
 
 </div>
 <button id="addToJourneyBtn" class="btn btn-primary">
