@@ -46,7 +46,7 @@ Return ONLY JSON in this format:
     );
 
     const genData = await genResponse.json();
-
+console.error("❌ JSON extraction failed:", genData);
     let rawText =
       genData?.candidates?.[0]?.content?.parts?.[0]?.text || "";
 
