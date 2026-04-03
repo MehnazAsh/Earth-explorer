@@ -9,6 +9,7 @@ console.log("text extracted",text);
     const match = text.match(/\[[\s\S]*\]/);
 console.log("text matched");
     if (match) {
+      console.log("json parsing started");
       return JSON.parse(match[0]);
     }
 console.log("query extracted");
