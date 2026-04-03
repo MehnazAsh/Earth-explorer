@@ -117,7 +117,7 @@ Query: ${query}
     );
 
     const genData = await genResponse.json();
-
+console.log("Response from gemini", gendata);
     let rawText =
       genData?.candidates?.[0]?.content?.parts?.[0]?.text || "";
 
