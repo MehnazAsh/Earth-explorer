@@ -5,7 +5,7 @@ function extractJSON(text) {
   try {
     console.log("inside extractJSON function");
     text = text.replace(/```json|```/g, "").trim();
-console.log("text extracted");
+console.log("text extracted",text);
     const match = text.match(/\[[\s\S]*\]/);
 console.log("text matched");
     if (match) {
