@@ -58,8 +58,41 @@ Return ONLY JSON in this format:
     let places;
 
     try {
-      places = JSON.parse(rawText);
-    } catch (e) {
+      //places = JSON.parse(rawText);
+function extractJSON(text) {
+  try {
+    // Remove markdown
+    text = text.replace(/```json|```/g, "").trim();
+
+    // Find first [ ... ] block
+    const match = text.match(/\[[\s\S]*\]/);
+
+    if (match) {
+      return JSON.parse(match[0]);
+    }
+
+    throw new Error("No JSON array found");
+
+  } catch (err) {
+    console.error("❌ JSON extraction failed:", text);
+    return null;
+  }
+}
+
+const extracted = extractJSON(rawText);
+
+if (!extracted) {
+  return res.status(200).json([
+    { place: "Bali", country: "Indonesia" },
+    { place: "Santorini", country: "Greece" }
+  ]);
+}
+
+places = extracted;
+
+      
+    } 
+    catch (e) {
       console.error("❌ JSON parse failed:", rawText);
 
       // fallback (so frontend doesn’t break)
