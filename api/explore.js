@@ -3,17 +3,52 @@
 // -------------------------------
 function extractJSON(text) {
   try {
-    console.log("inside extractJSON function");
+    console.log("inside extractJSON");
+
     text = text.replace(/```json|```/g, "").trim();
-console.log("text extracted",text);
+    console.log("clean text:", text);
+
+    // ✅ Try normal JSON first
     const match = text.match(/\[[\s\S]*\]/);
-console.log("text matched");
+
     if (match) {
-      console.log("json parsing started");
+      console.log("✅ JSON detected");
       return JSON.parse(match[0]);
     }
-console.log("query extracted");
-    throw new Error("No JSON array found");
+
+    // 🚨 Fallback: parse plain text list
+    console.log("⚠️ No JSON found, using fallback parsing");
+
+    const lines = text.split("\n");
+
+    const places = [];
+
+    for (let line of lines) {
+      line = line.trim();
+
+      // Match: "1. Bali, Indonesia" OR "Bali (Indonesia)"
+      const match1 = line.match(/^\d*\.?\s*(.+),\s*(.+)$/);
+      const match2 = line.match(/(.+)\s*\((.+)\)/);
+
+      if (match1) {
+        places.push({
+          place: match1[1].trim(),
+          country: match1[2].trim()
+        });
+      } else if (match2) {
+        places.push({
+          place: match2[1].trim(),
+          country: match2[2].trim()
+        });
+      }
+    }
+
+    if (places.length > 0) {
+      console.log("✅ Fallback parsed:", places);
+      return places;
+    }
+
+    throw new Error("No valid format found");
 
   } catch (err) {
     console.error("❌ JSON extraction failed:", text);
@@ -57,16 +92,22 @@ export default async function handler(req, res) {
               parts: [
                 {
                   text: `
-Return ONLY a valid JSON array.
-No explanation, no markdown, no text.
+You MUST return ONLY valid JSON.
 
-Format:
+Do NOT include:
+- any explanation
+- any text before or after
+- markdown formatting
+
+Return EXACTLY this format:
+
 [
-  { "place": "City/Place", "country": "Country" }
+  { "place": "Bali", "country": "Indonesia" },
+  { "place": "Santorini", "country": "Greece" }
 ]
 
 Query: ${query}
-                  `
+`
                 }
               ]
             }
@@ -83,7 +124,7 @@ Query: ${query}
     console.log("🧠 Raw Gemini:", rawText);
 
     const places = extractJSON(rawText);
-console.error("ExtractJSON called but Failed to extract");
+
     if (!places) {
       console.warn("⚠️ Using fallback (generation failed)");
       return res.status(200).json([
