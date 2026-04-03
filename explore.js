@@ -16,7 +16,7 @@ class AIExplorer {
   async search() {
   const query = document.getElementById('queryInput').value;
 
-  const res = await fetch('/api/explore', {
+  const res = await fetch('./explore', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ query })
