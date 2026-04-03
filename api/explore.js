@@ -10,7 +10,7 @@ function extractJSON(text) {
     if (match) {
       return JSON.parse(match[0]);
     }
-console.error("query extracted");
+console.log("query extracted");
     throw new Error("No JSON array found");
 
   } catch (err) {
