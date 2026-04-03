@@ -10,7 +10,7 @@ function extractJSON(text) {
     if (match) {
       return JSON.parse(match[0]);
     }
-
+console.error("query extracted");
     throw new Error("No JSON array found");
 
   } catch (err) {
@@ -81,7 +81,7 @@ Query: ${query}
     console.log("🧠 Raw Gemini:", rawText);
 
     const places = extractJSON(rawText);
-
+console.error("Failed to extract");
     if (!places) {
       console.warn("⚠️ Using fallback (generation failed)");
       return res.status(200).json([
