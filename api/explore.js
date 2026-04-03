@@ -1,4 +1,5 @@
 export default async function handler(req, res) {
+   try{
    console.log("🔥 API HIT");
 
   let body = req.body;
@@ -11,7 +12,11 @@ export default async function handler(req, res) {
         req.on('end', () => resolve(JSON.parse(data)));
       });
     }
-
+   }
+   catch (err) {
+    console.error("❌ ERROR:", err);
+    return res.status(500).json({ error: err.message });
+  }
     console.log("Body:", body);
   const { query } = req.body;
 
