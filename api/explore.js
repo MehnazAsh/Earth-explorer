@@ -64,7 +64,19 @@ export default async function handler(req, res) {
   try {
     console.log("🔥 API HIT");
 
-    const { query } = req.body || {};
+    let body = req.body;
+
+// 🔧 Handle Vercel raw body (string case)
+if (typeof body === "string") {
+  try {
+    body = JSON.parse(body);
+  } catch (e) {
+    console.error("❌ Failed to parse body");
+    body = {};
+  }
+}
+console.log("📥 Incoming body:", body);
+const { query } = body || {};
 
     if (!query) {
       return res.status(400).json({ error: "Query is required" });
