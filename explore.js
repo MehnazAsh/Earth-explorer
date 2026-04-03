@@ -21,7 +21,11 @@ console.log("Search clicked");
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ query })
   });
-
+if (!res.ok) {
+  const errText = await res.text();
+  console.error("API error:", errText);
+  return;
+}
   const data = await res.json();
 
   this.places = data; // ⭐ store here
