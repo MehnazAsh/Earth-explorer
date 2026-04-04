@@ -22,7 +22,7 @@ function extractJSON(text) {
     const lines = text.split("\n");
 
     const places = [];
-
+ console.log("⚠️ on line 25");
     for (let line of lines) {
       line = line.trim();
 
