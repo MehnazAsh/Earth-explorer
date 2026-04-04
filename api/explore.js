@@ -80,7 +80,7 @@ export default async function handler(req, res) {
       finalPlaces = getFallback();
     }
 
-    console.log("✅ FINAL OUTPUT:", finalPlaces);
+    //console.log("✅ FINAL OUTPUT:", finalPlaces);
 
     return res.status(200).json(finalPlaces);
 
