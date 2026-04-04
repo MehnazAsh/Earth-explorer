@@ -25,7 +25,7 @@ function extractJSON(text) {
  console.log("⚠️ on line 25");
     for (let line of lines) {
       line = line.trim();
-
+console.log("⚠️ inside for loop");
       // Match: "1. Bali, Indonesia" OR "Bali (Indonesia)"
       const match1 = line.match(/^\d*\.?\s*(.+),\s*(.+)$/);
       const match2 = line.match(/(.+)\s*\((.+)\)/);
