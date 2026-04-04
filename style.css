@@ -674,3 +674,55 @@ gmp-marker-3d {
         grid-template-columns: 1fr;
     }
 }
+
+/* RESULTS STYLING */
+#results {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Card */
+.result-card {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.result-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+/* Rank badge */
+.result-rank {
+  background: #667eea;
+  color: white;
+  font-weight: bold;
+  border-radius: 8px;
+  padding: 6px 10px;
+  margin-right: 12px;
+  font-size: 14px;
+}
+
+/* Content */
+.result-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.result-place {
+  font-size: 16px;
+  font-weight: 600;
+  color: #222;
+}
+
+.result-country {
+  font-size: 13px;
+  color: #666;
+}
