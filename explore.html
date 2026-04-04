@@ -3,41 +3,113 @@
 <head>
   <title>GeoHop AI Explore</title>
   <link rel="stylesheet" href="./style.css" />
+
+  <style>
+    /* Layout fix if not already in your CSS */
+    .main-layout {
+      display: flex;
+      height: calc(100vh - 80px);
+    }
+
+    .sidebar {
+      width: 35%;
+      overflow-y: auto;
+      border-right: 1px solid #eee;
+      background: #fafafa;
+    }
+
+    .map-container {
+      width: 65%;
+      position: relative;
+    }
+
+    .map-controls {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      display: flex;
+      gap: 10px;
+      z-index: 1000;
+    }
+
+    .map-controls button {
+      padding: 10px 15px;
+      border-radius: 8px;
+      border: none;
+      background: #667eea;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
 </head>
+
 <body>
 
 <div class="app-container">
+
+  <!-- HEADER -->
   <header class="header">
     <h1>🔍 AI Travel Explorer</h1>
   </header>
 
-  <div style="padding:20px;">
-    <input id="queryInput" placeholder="e.g. most beautiful islands in the world" style="width:60%; padding:10px;" />
-    <button id="searchBtn" class="btn btn-primary">Search</button>
+  <div class="main-layout">
+
+    <!-- LEFT COLUMN -->
+    <aside class="sidebar">
+      <div style="padding:20px;">
+
+        <input id="queryInput"
+               placeholder="e.g. most beautiful islands in the world"
+               style="width:100%; padding:10px;" />
+
+        <button id="searchBtn" class="btn btn-primary" style="margin-top:10px;">
+          Search
+        </button>
+
+        <!-- RESULTS -->
+        <div id="results" style="margin-top:20px;"></div>
+
+        <!-- CTA -->
+        <button id="createJourneyBtn" class="btn btn-primary" style="margin-top:20px;">
+          Create Journey ✈️
+        </button>
+
+      </div>
+    </aside>
+
+    <!-- RIGHT COLUMN -->
+    <main class="map-container">
+
+      <!-- 3D MAP -->
+      <gmp-map-3d 
+        id="map3d"
+        style="width:100%; height:100%;"
+        center="20,-10,15000000"
+        tilt="0"
+        heading="0"
+        range="15000000">
+      </gmp-map-3d>
+
+      <!-- CONTROLS -->
+      <div class="map-controls">
+        <button id="playBtn">▶ Play</button>
+        <button id="pauseBtn">⏸ Pause</button>
+        <button id="resetBtn">⏮ Reset</button>
+      </div>
+
+    </main>
+
   </div>
 
-  <div id="results"></div>
-
-  <!-- reuse your existing map -->
-   <main class="map-container">
-                <gmp-map-3d 
-                    id="map3d"
-                    center="20,-10,15000000" 
-                    tilt="0" 
-                    heading="0"
-                    range="15000000"
-                    mode="satellite">
-                </gmp-map-3d>
-
 </div>
-<button id="addToJourneyBtn" class="btn btn-primary">
-  Add to Journey ✈️
-</button>
 
+<!-- JS -->
+<script src="./explore.js"></script>
 
-<script async
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBft3sI8GFrO_Mv55elA0t7zZf73EwN2bI&v=beta&libraries=maps3d,marker,geometry"></script>
-   <script src="./explore.js"></script> 
+<!-- Google Maps -->
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&v=beta&libraries=maps3d,marker,geometry">
+</script>
 
 </body>
 </html>
