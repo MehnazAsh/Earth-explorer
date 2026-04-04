@@ -92,7 +92,7 @@ const { query } = body || {};
     // 🧠 AGENT 1: Generate places
     // -------------------------------
     const genResponse = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-flash-latest:generateContent?key=${API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`,
       {
         method: "POST",
         headers: {
