@@ -201,7 +201,16 @@ getZoomLevel(prev, current) {
 
   const zoom = this.getZoomLevel(prevHop, hop);
 
-  return this.map3d.flyCameraTo({
+  //return this.map3d.flyCameraTo({
+    //endCamera: {
+      //center: { lat: hop.lat, lng: hop.lng, altitude: zoom },
+      //range: zoom,
+      //tilt: zoom < 50000 ? 60 : 30,
+      //heading: 0
+    //},
+    //durationMillis: 3000
+  //});
+    return this.map3d.flyCameraTo({
     endCamera: {
       center: { lat: hop.lat, lng: hop.lng, altitude: zoom },
       range: zoom,
