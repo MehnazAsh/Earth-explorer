@@ -64,15 +64,19 @@ class AIExplorer {
     this.renderResults(data);
   }
 
-  renderResults(places) {
-    const container = document.getElementById('results');
+ renderResults(places) {
+  const container = document.getElementById('results');
 
-    container.innerHTML = places.map((p, i) => `
-      <div style="padding:10px; border-bottom:1px solid #eee;">
-        ${i + 1}. <strong>${p.place}</strong>, ${p.country}
+  container.innerHTML = places.map((p, i) => `
+    <div class="result-card">
+      <div class="result-rank">#${i + 1}</div>
+      <div class="result-content">
+        <div class="result-place">${p.place}</div>
+        <div class="result-country">${p.country}</div>
       </div>
-    `).join('');
-  }
+    </div>
+  `).join('');
+}
 
   // -------------------------------
   // ✈️ CREATE JOURNEY
