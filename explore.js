@@ -184,28 +184,55 @@ getZoomLevel(prev, current) {
   // -------------------------------
   // 🎬 PLAY JOURNEY
   // -------------------------------
-  async play() {
-    if (!this.hops.length) return;
+getZoomLevel(prev, current) {
+  if (!prev) return 15000000; // first → globe view
 
-    this.isPlaying = true;
-
-    for (let hop of this.hops) {
-      if (!this.isPlaying) break;
-
-      this.showOverlay(hop);
-
-      await this.map3d.flyCameraTo({
-        endCamera: {
-          center: { lat: hop.lat, lng: hop.lng, altitude: 100000 },
-          range: 5000000,
-          tilt: 30
-        },
-        durationMillis: 3000
-      });
-
-      await new Promise(r => setTimeout(r, 1500));
+  if (prev.country === current.country) {
+    if (prev.place === current.place) {
+      return 20000; // same city → very close
     }
+    return 200000; // same country → medium
   }
+
+  return 2000000; // different country → far
+}
+  animateToHop(hop, prevHop = null) {
+  if (!this.map3d) return;
+
+  const zoom = this.getZoomLevel(prevHop, hop);
+
+  return this.map3d.flyCameraTo({
+    endCamera: {
+      center: { lat: hop.lat, lng: hop.lng, altitude: zoom },
+      range: zoom,
+      tilt: zoom < 50000 ? 60 : 30,
+      heading: 0
+    },
+    durationMillis: 3000
+  });
+}
+
+  
+ async play() {
+  if (!this.hops.length) return;
+
+  this.isPlaying = true;
+
+  for (let i = 0; i < this.hops.length; i++) {
+    if (!this.isPlaying) break;
+
+    const hop = this.hops[i];
+    const prevHop = this.hops[i - 1];
+
+    this.showOverlay(hop);
+
+    await this.animateToHop(hop, prevHop);
+
+    await new Promise(r => setTimeout(r, 1500));
+  }
+}
+
+  
 
   pause() {
     this.isPlaying = false;
