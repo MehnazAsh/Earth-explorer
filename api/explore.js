@@ -1,210 +1,253 @@
-export default async function handler(req, res) {
-  try {
-    console.log("🔥 API HIT");
+class AIExplorer {
+  constructor() {
+    this.places = [];
+    this.hops = [];
+    this.map3d = null;
+    this.polylines = [];
+    this.isPlaying = false;
 
-    // -------------------------------
-    // 🧾 Parse request body
-    // -------------------------------
-    let body = req.body;
+    this.init();
+  }
 
-    if (typeof body === "string") {
-      try {
-        body = JSON.parse(body);
-      } catch {
-        body = {};
+  async init() {
+    await this.initMap();
+
+    document.getElementById('searchBtn')
+      .addEventListener('click', () => this.search());
+
+    document.getElementById('createJourneyBtn')
+      .addEventListener('click', () => this.createJourney());
+
+    document.getElementById('playBtn')
+      .addEventListener('click', () => this.play());
+
+    document.getElementById('pauseBtn')
+      .addEventListener('click', () => this.pause());
+
+    document.getElementById('resetBtn')
+      .addEventListener('click', () => this.reset());
+  }
+
+  async initMap() {
+    await new Promise(resolve => {
+      const check = () => {
+        if (window.google && google.maps) resolve();
+        else setTimeout(check, 100);
+      };
+      check();
+    });
+
+    await google.maps.importLibrary("maps3d");
+
+    this.map3d = document.getElementById('map3d');
+
+    this.map3d.center = { lat: 20, lng: 0, altitude: 15000000 };
+    this.map3d.range = 15000000;
+  }
+
+  // -------------------------------
+  // 🔍 SEARCH
+  // -------------------------------
+  async search() {
+    const query = document.getElementById('queryInput').value;
+
+    const res = await fetch('/api/explore', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query })
+    });
+
+    const data = await res.json();
+
+    this.places = data;
+
+    this.renderResults(data);
+  }
+
+  renderResults(places) {
+    const container = document.getElementById('results');
+
+    container.innerHTML = places.map((p, i) => `
+      <div style="padding:10px; border-bottom:1px solid #eee;">
+        ${i + 1}. <strong>${p.place}</strong>, ${p.country}
+      </div>
+    `).join('');
+  }
+
+  // -------------------------------
+  // ✈️ CREATE JOURNEY
+  // -------------------------------
+  async createJourney() {
+    if (!this.places.length) {
+      alert("Search first!");
+      return;
+    }
+
+    const geocoder = new google.maps.Geocoder();
+
+    this.hops = [];
+    this.clearMap();
+
+    for (let i = 0; i < this.places.length; i++) {
+      const p = this.places[i];
+
+      const res = await geocoder.geocode({
+        address: `${p.place}, ${p.country}`
+      });
+
+      if (res.results[0]) {
+        const loc = res.results[0].geometry.location;
+
+        const hop = {
+          lat: loc.lat(),
+          lng: loc.lng(),
+          city: p.place,
+          country: p.country
+        };
+
+        this.hops.push(hop);
+
+        // marker
+        const marker = document.createElement('gmp-marker-3d');
+        marker.position = {
+          lat: hop.lat,
+          lng: hop.lng,
+          altitude: 100
+        };
+
+        marker.addEventListener('click', () => this.showOverlay(hop));
+
+        this.map3d.appendChild(marker);
       }
     }
 
-    const { query } = body || {};
+    this.drawPolylines();
 
-    console.log("📥 Query:", query);
+    alert("Journey ready! Click ▶ Play");
+  }
 
-    if (!query) {
-      return res.status(400).json({ error: "Query is required" });
+  // -------------------------------
+  // 🌉 DRAW CURVED PATHS
+  // -------------------------------
+  drawPolylines() {
+    this.polylines.forEach(p => p.remove());
+    this.polylines = [];
+
+    if (this.hops.length < 2) return;
+
+    for (let i = 0; i < this.hops.length - 1; i++) {
+      const path = this.generateCurve(this.hops[i], this.hops[i + 1]);
+
+      const polyline = document.createElement('gmp-polyline-3d');
+      polyline.coordinates = path;
+      polyline.strokeColor = "#667eea";
+      polyline.strokeWidth = 4;
+
+      this.map3d.appendChild(polyline);
+      this.polylines.push(polyline);
+    }
+  }
+
+  generateCurve(start, end) {
+    const points = [];
+    const steps = 30;
+
+    for (let i = 0; i <= steps; i++) {
+      const t = i / steps;
+
+      const lat = start.lat + (end.lat - start.lat) * t;
+      const lng = start.lng + (end.lng - start.lng) * t;
+
+      const altitude = 300000 * 4 * t * (1 - t);
+
+      points.push({ lat, lng, altitude });
     }
 
-    const API_KEY = process.env.GEMINI_API_KEY;
+    return points;
+  }
 
-    if (!API_KEY) {
-      return res.status(500).json({ error: "Missing GEMINI_API_KEY" });
+  // -------------------------------
+  // 🎬 PLAY JOURNEY
+  // -------------------------------
+  async play() {
+    if (!this.hops.length) return;
+
+    this.isPlaying = true;
+
+    for (let hop of this.hops) {
+      if (!this.isPlaying) break;
+
+      this.showOverlay(hop);
+
+      await this.map3d.flyCameraTo({
+        endCamera: {
+          center: { lat: hop.lat, lng: hop.lng, altitude: 100000 },
+          range: 5000000,
+          tilt: 30
+        },
+        durationMillis: 3000
+      });
+
+      await new Promise(r => setTimeout(r, 1500));
     }
+  }
 
-    // -------------------------------
-    // 🧠 CALL GEMINI (1st attempt)
-    // -------------------------------
-    const places1 = await callGemini(API_KEY, query);
+  pause() {
+    this.isPlaying = false;
+  }
 
-    let finalPlaces = places1 || [];
+  reset() {
+    this.isPlaying = false;
 
-    console.log("🧠 First response count:", finalPlaces.length);
-
-    // -------------------------------
-    // 🔁 RETRY if less than 10
-    // -------------------------------
-    if (finalPlaces.length < 10) {
-      console.warn("⚠️ Retrying to get more results...");
-
-      const places2 = await callGemini(API_KEY, `more ${query}`);
-
-      if (places2) {
-        finalPlaces = [...finalPlaces, ...places2];
-      }
-    }
-
-    // -------------------------------
-    // 🧹 DEDUPLICATE
-    // -------------------------------
-    const unique = [];
-    const seen = new Set();
-
-    for (let p of finalPlaces) {
-      const key = `${p.place}-${p.country}`;
-      if (!seen.has(key)) {
-        seen.add(key);
-        unique.push(p);
-      }
-    }
-
-    finalPlaces = unique;
-
-    // -------------------------------
-    // ✂️ LIMIT TO 10
-    // -------------------------------
-    finalPlaces = finalPlaces.slice(0, 10);
-
-    // -------------------------------
-    // 🛟 FALLBACK if still empty
-    // -------------------------------
-    if (finalPlaces.length === 0) {
-      console.warn("⚠️ Using fallback data");
-      finalPlaces = getFallback();
-    }
-
-    //console.log("✅ FINAL OUTPUT:", finalPlaces);
-
-    return res.status(200).json(finalPlaces);
-
-  } catch (err) {
-    console.error("❌ SERVER ERROR:", err);
-
-    return res.status(500).json({
-      error: err.message || "Server crashed"
+    this.map3d.flyCameraTo({
+      endCamera: {
+        center: { lat: 20, lng: 0, altitude: 0 },
+        range: 15000000,
+        tilt: 0
+      },
+      durationMillis: 2000
     });
   }
-}
 
-// -------------------------------
-// 🧠 Gemini Call Helper
-// -------------------------------
-async function callGemini(API_KEY, query) {
-  try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${API_KEY}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                {
-                  text: `
-Return EXACTLY 10 travel destinations for: "${query}"
+  // -------------------------------
+  // 📍 OVERLAY (CITY POPUP)
+  // -------------------------------
+  showOverlay(hop) {
+    const existing = document.querySelector('.hop-overlay');
+    if (existing) existing.remove();
 
-Rules:
-- Must return 10 items
-- Real places only
-- No explanation
+    const el = document.createElement('div');
+    el.className = 'hop-overlay';
 
-Format:
-[
-  { "place": "City", "country": "Country" }
-]
-`
-                }
-              ]
-            }
-          ]
-        })
-      }
-    );
+    el.innerHTML = `
+      <div style="
+        position:fixed;
+        top:100px;
+        left:50%;
+        transform:translateX(-50%);
+        background:black;
+        color:white;
+        padding:15px 25px;
+        border-radius:10px;
+        font-size:18px;
+        z-index:9999;
+      ">
+        📍 <strong>${hop.city}</strong><br/>
+        ${hop.country}
+      </div>
+    `;
 
-    const data = await response.json();
+    document.body.appendChild(el);
 
-    console.log("🧠 Gemini raw:", data);
+    setTimeout(() => el.remove(), 3000);
+  }
 
-    let rawText = "";
-
-    if (data.candidates?.length) {
-      rawText = data.candidates[0]?.content?.parts
-        ?.map(p => p.text || "")
-        .join("");
-    }
-
-    if (!rawText) return null;
-
-    return extractJSON(rawText);
-
-  } catch (err) {
-    console.error("❌ Gemini call failed:", err);
-    return null;
+  // -------------------------------
+  // 🧹 CLEAR MAP
+  // -------------------------------
+  clearMap() {
+    this.map3d.innerHTML = "";
   }
 }
 
-// -------------------------------
-// 🧠 JSON Extractor
-// -------------------------------
-function extractJSON(text) {
-  try {
-    text = text.replace(/```json|```/g, "").trim();
-
-    const match = text.match(/\[[\s\S]*\]/);
-
-    if (match) {
-      return JSON.parse(match[0]);
-    }
-
-    // fallback parsing
-    const lines = text.split("\n");
-    const places = [];
-
-    for (let line of lines) {
-      line = line.trim();
-
-      const m1 = line.match(/^\d*\.?\s*(.+),\s*(.+)$/);
-      const m2 = line.match(/(.+)\s*\((.+)\)/);
-
-      if (m1) {
-        places.push({
-          place: m1[1].trim(),
-          country: m1[2].trim()
-        });
-      } else if (m2) {
-        places.push({
-          place: m2[1].trim(),
-          country: m2[2].trim()
-        });
-      }
-    }
-
-    return places.length ? places : null;
-
-  } catch (err) {
-    console.error("❌ JSON extraction failed:", text);
-    return null;
-  }
-}
-
-// -------------------------------
-// 🌍 Fallback Data
-// -------------------------------
-function getFallback() {
-  return [
-    { place: "Bali", country: "Indonesia" },
-    { place: "Santorini", country: "Greece" },
-    { place: "Maldives", country: "Maldives" }
-   
-  ];
-}
+new AIExplorer();
