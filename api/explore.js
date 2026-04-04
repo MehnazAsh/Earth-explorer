@@ -1,82 +1,23 @@
-// -------------------------------
-// 🔧 Helper: Extract JSON safely
-// -------------------------------
-function extractJSON(text) {
-  try {
-    console.log("inside extractJSON");
-
-    text = text.replace(/```json|```/g, "").trim();
-    console.log("clean text:", text);
-
-    // ✅ Try normal JSON first
-    const match = text.match(/\[[\s\S]*\]/);
-
-    if (match) {
-      console.log("✅ JSON detected");
-      return JSON.parse(match[0]);
-    }
-
-    // 🚨 Fallback: parse plain text list
-    console.log("⚠️ No JSON found, using fallback parsing");
-
-    const lines = text.split("\n");
-
-    const places = [];
- console.log("⚠️ on line 25");
-    for (let line of lines) {
-      line = line.trim();
-console.log("⚠️ inside for loop");
-      // Match: "1. Bali, Indonesia" OR "Bali (Indonesia)"
-      const match1 = line.match(/^\d*\.?\s*(.+),\s*(.+)$/);
-      const match2 = line.match(/(.+)\s*\((.+)\)/);
-
-      if (match1) {
-        places.push({
-          place: match1[1].trim(),
-          country: match1[2].trim()
-        });
-      } else if (match2) {
-        places.push({
-          place: match2[1].trim(),
-          country: match2[2].trim()
-        });
-      }
-    }
-
-    if (places.length > 0) {
-      console.log("✅ Fallback parsed:", places);
-      return places;
-    }
-
-    throw new Error("No valid format found");
-
-  } catch (err) {
-    console.error("❌ JSON extraction failed:", text);
-    return null;
-  }
-}
-
-
-// -------------------------------
-// 🚀 API Handler
-// -------------------------------
 export default async function handler(req, res) {
   try {
     console.log("🔥 API HIT");
 
+    // -------------------------------
+    // 🧾 Parse request body
+    // -------------------------------
     let body = req.body;
 
-// 🔧 Handle Vercel raw body (string case)
-if (typeof body === "string") {
-  try {
-    body = JSON.parse(body);
-  } catch (e) {
-    console.error("❌ Failed to parse body");
-    body = {};
-  }
-}
-console.log("📥 Incoming body:", body);
-const { query } = body || {};
+    if (typeof body === "string") {
+      try {
+        body = JSON.parse(body);
+      } catch {
+        body = {};
+      }
+    }
+
+    const { query } = body || {};
+
+    console.log("📥 Query:", query);
 
     if (!query) {
       return res.status(400).json({ error: "Query is required" });
@@ -89,10 +30,76 @@ const { query } = body || {};
     }
 
     // -------------------------------
-    // 🧠 AGENT 1: Generate places
+    // 🧠 CALL GEMINI (1st attempt)
     // -------------------------------
-    const genResponse = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`,
+    const places1 = await callGemini(API_KEY, query);
+
+    let finalPlaces = places1 || [];
+
+    console.log("🧠 First response count:", finalPlaces.length);
+
+    // -------------------------------
+    // 🔁 RETRY if less than 10
+    // -------------------------------
+    if (finalPlaces.length < 10) {
+      console.warn("⚠️ Retrying to get more results...");
+
+      const places2 = await callGemini(API_KEY, `more ${query}`);
+
+      if (places2) {
+        finalPlaces = [...finalPlaces, ...places2];
+      }
+    }
+
+    // -------------------------------
+    // 🧹 DEDUPLICATE
+    // -------------------------------
+    const unique = [];
+    const seen = new Set();
+
+    for (let p of finalPlaces) {
+      const key = `${p.place}-${p.country}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        unique.push(p);
+      }
+    }
+
+    finalPlaces = unique;
+
+    // -------------------------------
+    // ✂️ LIMIT TO 10
+    // -------------------------------
+    finalPlaces = finalPlaces.slice(0, 10);
+
+    // -------------------------------
+    // 🛟 FALLBACK if still empty
+    // -------------------------------
+    if (finalPlaces.length === 0) {
+      console.warn("⚠️ Using fallback data");
+      finalPlaces = getFallback();
+    }
+
+    console.log("✅ FINAL OUTPUT:", finalPlaces);
+
+    return res.status(200).json(finalPlaces);
+
+  } catch (err) {
+    console.error("❌ SERVER ERROR:", err);
+
+    return res.status(500).json({
+      error: err.message || "Server crashed"
+    });
+  }
+}
+
+// -------------------------------
+// 🧠 Gemini Call Helper
+// -------------------------------
+async function callGemini(API_KEY, query) {
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${API_KEY}`,
       {
         method: "POST",
         headers: {
@@ -104,21 +111,17 @@ const { query } = body || {};
               parts: [
                 {
                   text: `
-You MUST return ONLY valid JSON.
+Return EXACTLY 10 travel destinations for: "${query}"
 
-Do NOT include:
-- any explanation
-- any text before or after
-- markdown formatting
+Rules:
+- Must return 10 items
+- Real places only
+- No explanation
 
-Return EXACTLY this format:
-
+Format:
 [
-  { "place": "Bali", "country": "Indonesia" },
-  { "place": "Santorini", "country": "Greece" }
+  { "place": "City", "country": "Country" }
 ]
-
-Query: ${query}
 `
                 }
               ]
@@ -128,75 +131,80 @@ Query: ${query}
       }
     );
 
-    const genData = await genResponse.json();
-console.log("Response from gemini", genData);
-    let rawText =
-      genData?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    const data = await response.json();
 
-    console.log("🧠 Raw Gemini:", rawText);
+    console.log("🧠 Gemini raw:", data);
 
-    const places = extractJSON(rawText);
+    let rawText = "";
 
-    if (!places) {
-      console.warn("⚠️ Using fallback (generation failed)");
-      return res.status(200).json([
-        { place: "Bali", country: "Indonesia" },
-        { place: "Santorini", country: "Greece" }
-      ]);
+    if (data.candidates?.length) {
+      rawText = data.candidates[0]?.content?.parts
+        ?.map(p => p.text || "")
+        .join("");
     }
 
-    // -------------------------------
-    // 🧠 AGENT 2: Verify places
-    // -------------------------------
-    const verifyResponse = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                {
-                  text: `
-Verify this list contains real places.
-Fix any incorrect ones.
+    if (!rawText) return null;
 
-Return ONLY valid JSON array in same format.
-
-${JSON.stringify(places)}
-                  `
-                }
-              ]
-            }
-          ]
-        })
-      }
-    );
-
-    const verifyData = await verifyResponse.json();
-
-    let verifiedText =
-      verifyData?.candidates?.[0]?.content?.parts?.[0]?.text || "";
-
-    console.log("🔍 Verified Raw:", verifiedText);
-
-    const verifiedPlaces = extractJSON(verifiedText) || places;
-
-    // -------------------------------
-    // ✅ FINAL RESPONSE
-    // -------------------------------
-    console.log("✅ FINAL OUTPUT:", verifiedPlaces);
-
-    return res.status(200).json(verifiedPlaces);
+    return extractJSON(rawText);
 
   } catch (err) {
-    console.error("❌ SERVER ERROR:", err);
-
-    return res.status(500).json({
-      error: err.message || "Server crashed"
-    });
+    console.error("❌ Gemini call failed:", err);
+    return null;
   }
+}
+
+// -------------------------------
+// 🧠 JSON Extractor
+// -------------------------------
+function extractJSON(text) {
+  try {
+    text = text.replace(/```json|```/g, "").trim();
+
+    const match = text.match(/\[[\s\S]*\]/);
+
+    if (match) {
+      return JSON.parse(match[0]);
+    }
+
+    // fallback parsing
+    const lines = text.split("\n");
+    const places = [];
+
+    for (let line of lines) {
+      line = line.trim();
+
+      const m1 = line.match(/^\d*\.?\s*(.+),\s*(.+)$/);
+      const m2 = line.match(/(.+)\s*\((.+)\)/);
+
+      if (m1) {
+        places.push({
+          place: m1[1].trim(),
+          country: m1[2].trim()
+        });
+      } else if (m2) {
+        places.push({
+          place: m2[1].trim(),
+          country: m2[2].trim()
+        });
+      }
+    }
+
+    return places.length ? places : null;
+
+  } catch (err) {
+    console.error("❌ JSON extraction failed:", text);
+    return null;
+  }
+}
+
+// -------------------------------
+// 🌍 Fallback Data
+// -------------------------------
+function getFallback() {
+  return [
+    { place: "Bali", country: "Indonesia" },
+    { place: "Santorini", country: "Greece" },
+    { place: "Maldives", country: "Maldives" }
+   
+  ];
 }
