@@ -1,293 +1,180 @@
 class AIExplorer {
   constructor() {
     this.places = [];
-    this.hops = [];
-    this.map3d = null;
-    this.polylines = [];
-    this.isPlaying = false;
-
+    this.geohop = null;
     this.init();
   }
 
   async init() {
-    await this.initMap();
+    console.log("🚀 AI Explorer Init");
 
+    // Wait for Google Maps
+    await this.waitForMaps();
+
+    // Initialize your EXISTING GeoHop engine
+    this.geohop = new GeoHop3D();
+
+    // Hook buttons
     document.getElementById('searchBtn')
-      .addEventListener('click', () => this.search());
+      ?.addEventListener('click', () => this.search());
 
     document.getElementById('createJourneyBtn')
-      .addEventListener('click', () => this.createJourney());
+      ?.addEventListener('click', () => this.createJourney());
 
     document.getElementById('playBtn')
-      .addEventListener('click', () => this.play());
+      ?.addEventListener('click', () => this.geohop.playJourney());
 
     document.getElementById('pauseBtn')
-      .addEventListener('click', () => this.pause());
+      ?.addEventListener('click', () => this.geohop.pauseJourney());
 
     document.getElementById('resetBtn')
-      .addEventListener('click', () => this.reset());
+      ?.addEventListener('click', () => this.geohop.resetJourney());
   }
 
-  async initMap() {
-    await new Promise(resolve => {
+  // -----------------------------
+  // WAIT FOR MAPS
+  // -----------------------------
+  waitForMaps() {
+    return new Promise(resolve => {
       const check = () => {
         if (window.google && google.maps) resolve();
         else setTimeout(check, 100);
       };
       check();
     });
-
-    await google.maps.importLibrary("maps3d");
-
-    this.map3d = document.getElementById('map3d');
-
-    this.map3d.center = { lat: 20, lng: 0, altitude: 15000000 };
-    this.map3d.range = 15000000;
   }
 
-  // -------------------------------
-  // 🔍 SEARCH
-  // -------------------------------
+  // -----------------------------
+  // 🔍 SEARCH (calls backend)
+  // -----------------------------
   async search() {
     const query = document.getElementById('queryInput').value;
 
-    const res = await fetch('/api/explore', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query })
-    });
+    if (!query) {
+      alert("Enter a search query");
+      return;
+    }
 
-    const data = await res.json();
+    console.log("🔍 Searching:", query);
 
-    this.places = data;
+    try {
+      const res = await fetch('/api/explore', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query })
+      });
 
-    this.renderResults(data);
+      const data = await res.json();
+
+      console.log("✅ AI Results:", data);
+
+      this.places = data;
+
+      this.renderResults(data);
+
+    } catch (err) {
+      console.error("❌ Search failed:", err);
+      alert("Search failed. Check backend.");
+    }
   }
 
- renderResults(places) {
-  const container = document.getElementById('results');
+  // -----------------------------
+  // 🎨 RENDER RESULTS (styled)
+  // -----------------------------
+  renderResults(places) {
+    const container = document.getElementById('results');
 
-  container.innerHTML = places.map((p, i) => `
-    <div class="result-card">
-      <div class="result-rank">#${i + 1}</div>
-      <div class="result-content">
-        <div class="result-place">${p.place}</div>
-        <div class="result-country">${p.country}</div>
+    container.innerHTML = places.map((p, i) => `
+      <div class="result-card">
+        <div class="result-rank">#${i + 1}</div>
+        <div class="result-content">
+          <div class="result-place">${p.place}</div>
+          <div class="result-country">${p.country}</div>
+        </div>
       </div>
-    </div>
-  `).join('');
-}
+    `).join('');
+  }
 
-  // -------------------------------
-  // ✈️ CREATE JOURNEY
-  // -------------------------------
+  // -----------------------------
+  // 🌍 CONVERT AI → HOPS
+  // -----------------------------
+  async convertToHops() {
+    const geocoder = new google.maps.Geocoder();
+    const hops = [];
+
+    for (let i = 0; i < this.places.length; i++) {
+      const p = this.places[i];
+
+      try {
+        const res = await geocoder.geocode({
+          address: `${p.place}, ${p.country}`
+        });
+
+        if (res.results[0]) {
+          const loc = res.results[0].geometry.location;
+
+          hops.push({
+            id: Date.now() + i,
+            city: p.place,
+            country: p.country,
+            lat: loc.lat(),
+            lng: loc.lng(),
+            altitude: 100,
+            date: this.generateDate(i),
+            description: "AI discovered destination ✨"
+          });
+        }
+
+      } catch (err) {
+        console.warn("⚠️ Geocode failed:", p);
+      }
+    }
+
+    return hops;
+  }
+
+  // -----------------------------
+  // ✈️ CREATE JOURNEY (KEY PART)
+  // -----------------------------
   async createJourney() {
     if (!this.places.length) {
       alert("Search first!");
       return;
     }
 
-    const geocoder = new google.maps.Geocoder();
+    console.log("✈️ Creating journey...");
 
-    this.hops = [];
-    this.clearMap();
+    const hops = await this.convertToHops();
 
-    for (let i = 0; i < this.places.length; i++) {
-      const p = this.places[i];
+    // Inject into GeoHop engine
+    this.geohop.hops = hops;
 
-      const res = await geocoder.geocode({
-        address: `${p.place}, ${p.country}`
-      });
+    // Reset existing state
+    this.geohop.markers = [];
+    this.geohop.polylines = [];
 
-      if (res.results[0]) {
-        const loc = res.results[0].geometry.location;
+    // Render using EXISTING engine
+    this.geohop.displayHops();
+    this.geohop.updatePolylines();
+    this.geohop.updateStats();
 
-        const hop = {
-          lat: loc.lat(),
-          lng: loc.lng(),
-          city: p.place,
-          country: p.country
-        };
-
-        this.hops.push(hop);
-
-        // marker
-        const marker = document.createElement('gmp-marker-3d');
-        marker.position = {
-          lat: hop.lat,
-          lng: hop.lng,
-          altitude: 100
-        };
-
-        marker.addEventListener('click', () => this.showOverlay(hop));
-
-        this.map3d.appendChild(marker);
-      }
+    // Add markers
+    for (let hop of hops) {
+      await this.geohop.addMarker3D(hop);
     }
 
-    this.drawPolylines();
-
-    alert("Journey ready! Click ▶ Play");
+    alert("✅ Journey ready! Click Play ▶");
   }
 
-  // -------------------------------
-  // 🌉 DRAW CURVED PATHS
-  // -------------------------------
-  drawPolylines() {
-    this.polylines.forEach(p => p.remove());
-    this.polylines = [];
-
-    if (this.hops.length < 2) return;
-
-    for (let i = 0; i < this.hops.length - 1; i++) {
-      const path = this.generateCurve(this.hops[i], this.hops[i + 1]);
-
-      const polyline = document.createElement('gmp-polyline-3d');
-      polyline.coordinates = path;
-      polyline.strokeColor = "#667eea";
-      polyline.strokeWidth = 4;
-
-      this.map3d.appendChild(polyline);
-      this.polylines.push(polyline);
-    }
-  }
-
-  generateCurve(start, end) {
-    const points = [];
-    const steps = 30;
-
-    for (let i = 0; i <= steps; i++) {
-      const t = i / steps;
-
-      const lat = start.lat + (end.lat - start.lat) * t;
-      const lng = start.lng + (end.lng - start.lng) * t;
-
-      const altitude = 300000 * 4 * t * (1 - t);
-
-      points.push({ lat, lng, altitude });
-    }
-
-    return points;
-  }
-
-  // -------------------------------
-  // 🎬 PLAY JOURNEY
-  // -------------------------------
-getZoomLevel(prev, current) {
-  if (!prev) return 15000000; // first → globe view
-
-  if (prev.country === current.country) {
-    if (prev.place === current.place) {
-      return 20000; // same city → very close
-    }
-    return 200000; // same country → medium
-  }
-
-  return 2000000; // different country → far
-}
-  animateToHop(hop, prevHop = null) {
-  if (!this.map3d) return;
-
-  const zoom = this.getZoomLevel(prevHop, hop);
-
-  //return this.map3d.flyCameraTo({
-    //endCamera: {
-      //center: { lat: hop.lat, lng: hop.lng, altitude: zoom },
-      //range: zoom,
-      //tilt: zoom < 50000 ? 60 : 30,
-      //heading: 0
-    //},
-    //durationMillis: 3000
-  //});
-    return this.map3d.flyCameraTo({
-    endCamera: {
-      center: { lat: hop.lat, lng: hop.lng, altitude: zoom },
-      range: zoom,
-      tilt: zoom < 50000 ? 60 : 30,
-      heading: 0
-    },
-    durationMillis: 3000
-  });
-}
-
-  
- async play() {
-  if (!this.hops.length) return;
-
-  this.isPlaying = true;
-
-  for (let i = 0; i < this.hops.length; i++) {
-    if (!this.isPlaying) break;
-
-    const hop = this.hops[i];
-    const prevHop = this.hops[i - 1];
-
-    this.showOverlay(hop);
-
-    await this.animateToHop(hop, prevHop);
-
-    await new Promise(r => setTimeout(r, 1500));
+  // -----------------------------
+  // 📅 AUTO DATE GENERATION
+  // -----------------------------
+  generateDate(index) {
+    const base = new Date();
+    base.setDate(base.getDate() - (this.places.length - index));
+    return base.toISOString().split('T')[0];
   }
 }
 
-  
-
-  pause() {
-    this.isPlaying = false;
-  }
-
-  reset() {
-    this.isPlaying = false;
-
-    this.map3d.flyCameraTo({
-      endCamera: {
-        center: { lat: 20, lng: 0, altitude: 0 },
-        range: 15000000,
-        tilt: 0
-      },
-      durationMillis: 2000
-    });
-  }
-
-  // -------------------------------
-  // 📍 OVERLAY (CITY POPUP)
-  // -------------------------------
-  showOverlay(hop) {
-    const existing = document.querySelector('.hop-overlay');
-    if (existing) existing.remove();
-
-    const el = document.createElement('div');
-    el.className = 'hop-overlay';
-
-    el.innerHTML = `
-      <div style="
-        position:fixed;
-        top:100px;
-        left:50%;
-        transform:translateX(-50%);
-        background:black;
-        color:white;
-        padding:15px 25px;
-        border-radius:10px;
-        font-size:18px;
-        z-index:9999;
-      ">
-        📍 <strong>${hop.city}</strong><br/>
-        ${hop.country}
-      </div>
-    `;
-
-    document.body.appendChild(el);
-
-    setTimeout(() => el.remove(), 3000);
-  }
-
-  // -------------------------------
-  // 🧹 CLEAR MAP
-  // -------------------------------
-  clearMap() {
-    this.map3d.innerHTML = "";
-  }
-}
-
+// INIT
 new AIExplorer();
