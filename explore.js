@@ -120,7 +120,7 @@ class AIExplorer {
             lat: loc.lat(),
             lng: loc.lng(),
             altitude: 100,
-            date: this.generateDate(i),
+            order:i,
             description: "AI discovered destination ✨"
           });
         }
