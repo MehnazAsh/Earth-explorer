@@ -532,13 +532,13 @@ if (this.hops.length === 0) {
 hopsList.innerHTML = '<p style="text-align: center; opacity: 0.6;">No hops yet. Start adding places!</p>';
 return;
 }
-this.hops.forEach((hop, index) => {
+this.hops.forEach((hop) => {
 const hopItem = document.createElement('div');
 hopItem.className = 'hop-item';
 hopItem.dataset.hopId = hop.id;
 hopItem.innerHTML = `
 <button class="delete-hop" onclick="geohop.deleteHop(${hop.id})">×</button>
-<span class="hop-number">${index + 1}</span>
+<span class="hop-number">${hop.order + 1}</span>
 <div style="display: inline-block; vertical-align: top; width: calc(100% - 40px);">
 <div class="hop-location">${hop.city}, ${hop.country}</div>
 
@@ -1004,17 +1004,19 @@ clearExistingJourney() {
     }
   }, { offset: Number.NEGATIVE_INFINITY }).element;
 }
-  updateOrder() {
+updateOrder() {
   const items = document.querySelectorAll('.hop-item');
 
   items.forEach((item, index) => {
     const id = parseInt(item.dataset.hopId);
     const hop = this.hops.find(h => h.id === id);
-    if (hop) hop.order = index;
+
+    if (hop) {
+      hop.order = index; // ✅ THIS is the key
+    }
   });
 
   this.saveHops();
-  this.updatePolylines();
 }
 loadHops() {
     this.clearExistingJourney(); 
