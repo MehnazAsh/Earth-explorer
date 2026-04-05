@@ -552,6 +552,7 @@ this.focusOnHop(hop);
 });
 hopsList.appendChild(hopItem);
 });
+  this.enableDragAndDrop();
 }
 
 // Enhanced focusOnHop with labels
