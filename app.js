@@ -963,6 +963,7 @@ overlay.classList.remove('active');
 saveHops() {
 try {
 localStorage.setItem('geoHops3D', JSON.stringify(this.hops));
+  console.log("I am svaing hops", this.hops)
 } catch (error) {
 console.error('Error saving hops:', error);
 }
