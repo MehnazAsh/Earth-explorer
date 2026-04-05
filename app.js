@@ -249,9 +249,9 @@ this.navigateHop(1);
 async addHop() {
 const city = document.getElementById('city').value.trim();
 const country = document.getElementById('country').value.trim();
-const date = document.getElementById('date').value;
+//const date = document.getElementById('date').value;
 const description = document.getElementById('description').value.trim();
-if (!city || !country || !date) {
+if (!city || !country) {
 this.showNotification('Please fill in all required fields', 'error');
 return;
 }
@@ -283,15 +283,15 @@ if (photoInput?.files.length) {
 }
 
 const hop = {
-id: Date.now(),
-city,
-country,
-date,
-description,
-lat: location.lat(),
-lng: location.lng(),
-altitude: 100,
-photos
+  id: Date.now(),
+  city,
+  country,
+  lat: location.lat(),
+  lng: location.lng(),
+  altitude: 100,
+  order: this.hops.length, // 👈 NEW
+  description,
+  photos
 };
 this.hops.unshift(hop);
 this.saveHops();
@@ -434,7 +434,7 @@ polyline.remove();
 this.polylines = [];
 if (this.hops.length < 2) return;
 // Sort hops by date
-const sortedHops = [...this.hops].sort((a, b) => new Date(a.date) - new Date(b.date));
+const sortedHops = [...this.hops].sort((a, b) => a.order - b.order);
 // Check if we have the 3D library
 if (this.maps3dLibrary && this.maps3dLibrary.Polyline3DElement) {
 const Polyline3DElement = this.maps3dLibrary.Polyline3DElement;
@@ -601,7 +601,7 @@ const pauseBtn = document.getElementById('pauseBtn');
 if (playBtn) playBtn.disabled = true;
 if (pauseBtn) pauseBtn.disabled = false;
 // Sort hops by date
-const sortedHops = [...this.hops].sort((a, b) => new Date(a.date) - new Date(b.date));
+const sortedHops = [...this.hops].sort((a, b) => a.order - b.order);
 try {
 // Start with globe view
 await this.map3d.flyCameraTo({
@@ -743,7 +743,7 @@ console.error('Error toggling view mode:', error);
 }
 
 navigateHop(direction) {
-const sortedHops = [...this.hops].sort((a, b) => new Date(a.date) - new Date(b.date));
+const sortedHops = [...this.hops].sort((a, b) => a.order - b.order);
 if (sortedHops.length === 0) return;
 this.currentHopIndex = Math.max(0, Math.min(sortedHops.length - 1, this.currentHopIndex + direction));
 this.focusOnHop(sortedHops[this.currentHopIndex]);
@@ -780,7 +780,7 @@ if (totalCountriesEl) totalCountriesEl.textContent = countries.size;
 // Calculate total distance
 let totalDistance = 0;
 if (this.hops.length > 1) {
-const sortedHops = [...this.hops].sort((a, b) => new Date(a.date) - new Date(b.date));
+const sortedHops = [...this.hops].sort((a, b) => a.order - b.order);
 for (let i = 0; i < sortedHops.length - 1; i++) {
 totalDistance += this.calculateDistance(sortedHops[i], sortedHops[i + 1]);
 }
