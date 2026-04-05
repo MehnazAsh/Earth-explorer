@@ -954,6 +954,47 @@ clearExistingJourney() {
 
   this.hops = [];
 }
+  getDragAfterElement(container, y) {
+  const draggableElements = [...container.querySelectorAll('.hop-item:not(.dragging)')];
+
+  return draggableElements.reduce((closest, child) => {
+    const box = child.getBoundingClientRect();
+    const offset = y - box.top - box.height / 2;
+
+    if (offset < 0 && offset > closest.offset) {
+      return { offset: offset, element: child };
+    } else {
+      return closest;
+    }
+  }, { offset: Number.NEGATIVE_INFINITY }).element;
+}
+
+  getDragAfterElement(container, y) {
+  const draggableElements = [...container.querySelectorAll('.hop-item:not(.dragging)')];
+
+  return draggableElements.reduce((closest, child) => {
+    const box = child.getBoundingClientRect();
+    const offset = y - box.top - box.height / 2;
+
+    if (offset < 0 && offset > closest.offset) {
+      return { offset: offset, element: child };
+    } else {
+      return closest;
+    }
+  }, { offset: Number.NEGATIVE_INFINITY }).element;
+}
+  updateOrder() {
+  const items = document.querySelectorAll('.hop-item');
+
+  items.forEach((item, index) => {
+    const id = parseInt(item.dataset.hopId);
+    const hop = this.hops.find(h => h.id === id);
+    if (hop) hop.order = index;
+  });
+
+  this.saveHops();
+  this.updatePolylines();
+}
 loadHops() {
     this.clearExistingJourney(); 
 const urlParams = new URLSearchParams(window.location.search);
