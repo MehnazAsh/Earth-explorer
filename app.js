@@ -409,7 +409,7 @@ overlay.innerHTML = `
 <div style="font-size: 32px; margin-bottom: 10px;">📍</div>
 <div style="font-size: 28px; font-weight: bold; margin-bottom: 5px;">${hop.city}</div>
 <div style="font-size: 20px; opacity: 0.8; margin-bottom: 10px;">${hop.country}</div>
-<div style="font-size: 14px; opacity: 0.6;">${this.formatDate(hop.date)}</div>
+
 ${hop.description ? `<div style="font-size: 14px; margin-top: 10px; font-style: italic;">"${hop.description}"</div>` : ''}
 </div>
 `;
@@ -895,14 +895,6 @@ const photos = document.getElementById('photos');
 if (photos) photos.value = '';
 }
 
-formatDate(dateString) {
-const date = new Date(dateString);
-return date.toLocaleDateString('en-US', {
-year: 'numeric',
-month: 'long',
-day: 'numeric'
-});
-}
 
 setDateConstraints() {
 const dateInput = document.getElementById('date');
