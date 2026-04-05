@@ -538,7 +538,7 @@ hopItem.className = 'hop-item';
 hopItem.dataset.hopId = hop.id;
 hopItem.innerHTML = `
 <button class="delete-hop" onclick="geohop.deleteHop(${hop.id})">×</button>
-<span class="hop-number">${hop.order + 1}</span>
+
 <div style="display: inline-block; vertical-align: top; width: calc(100% - 40px);">
 <div class="hop-location">${hop.city}, ${hop.country}</div>
 
