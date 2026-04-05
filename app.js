@@ -541,7 +541,7 @@ hopItem.innerHTML = `
 <span class="hop-number">${this.hops.length - index}</span>
 <div style="display: inline-block; vertical-align: top; width: calc(100% - 40px);">
 <div class="hop-location">${hop.city}, ${hop.country}</div>
-//<div class="hop-date">${this.formatDate(hop.date)}</div>
+
 ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''}
 </div>
 `;
