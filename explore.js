@@ -12,7 +12,7 @@ class AIExplorer {
     await this.waitForMaps();
 
     // Initialize your EXISTING GeoHop engine
-    this.geohop = new GeoHop3D();
+    this.geohop = new GeoHop3D({ skipLoad: true });
 
     // Hook buttons
     document.getElementById('searchBtn')
