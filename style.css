@@ -726,3 +726,10 @@ gmp-marker-3d {
   font-size: 13px;
   color: #666;
 }
+
+.hop-item {
+  cursor: grab;
+}
+.hop-item.dragging {
+  opacity: 0.5;
+}
