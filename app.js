@@ -554,7 +554,35 @@ hopsList.appendChild(hopItem);
 });
   this.enableDragAndDrop();
 }
+enableDragAndDrop() {
+  const list = document.getElementById('hopsList');
+  const items = list.querySelectorAll('.hop-item');
 
+  items.forEach(item => {
+    item.draggable = true;
+
+    item.addEventListener('dragstart', () => {
+      item.classList.add('dragging');
+    });
+
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      this.updateOrder();
+    });
+  });
+
+  list.addEventListener('dragover', e => {
+    e.preventDefault();
+    const dragging = document.querySelector('.dragging');
+    const afterElement = this.getDragAfterElement(list, e.clientY);
+
+    if (afterElement == null) {
+      list.appendChild(dragging);
+    } else {
+      list.insertBefore(dragging, afterElement);
+    }
+  });
+}
 // Enhanced focusOnHop with labels
 focusOnHop(hop) {
 if (!this.map3d) return;
