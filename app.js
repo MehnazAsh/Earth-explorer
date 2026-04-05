@@ -1,6 +1,7 @@
 // GeoHop 3D Application - Fixed Version with Proper 3D Library Loading
 class GeoHop3D {
-constructor() {
+constructor(options = {}) {
+this.skipLoad = options.skipLoad || false;
 this.map3d = null;
 this.hops = [];
 this.markers = [];
@@ -28,7 +29,9 @@ await this.initMap3D();
 // Setup event listeners
 this.setupEventListeners();
 // Load saved data
-this.loadHops();
+if (!this.skipLoad) {
+  this.loadHops();
+}
 // Set date constraints
 this.setDateConstraints();
 console.log('GeoHop initialization complete!');
