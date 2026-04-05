@@ -44,18 +44,7 @@ class AIExplorer {
     this.map3d.center = { lat: 20, lng: 0, altitude: 15000000 };
     this.map3d.range = 15000000;
   }
-getZoomLevel(prev, current) {
-  if (!prev) return 15000000; // first zoom = globe
 
-  if (prev.country === current.country) {
-    if (prev.place === current.place) {
-      return 20000; // same city → very zoomed
-    }
-    return 200000; // same country → medium zoom
-  }
-
-  return 2000000; // different country → far zoom
-}
   // -------------------------------
   // 🔍 SEARCH
   // -------------------------------
