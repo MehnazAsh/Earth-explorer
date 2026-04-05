@@ -1018,5 +1018,7 @@ document.head.appendChild(style);
 let geohop;
 document.addEventListener('DOMContentLoaded', () => {
 console.log('DOM loaded, initializing GeoHop...');
-geohop = new GeoHop3D();
+if (document.getElementById('addHopForm')) {
+    geohop = new GeoHop3D();
+  }
 });
