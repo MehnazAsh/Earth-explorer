@@ -186,15 +186,6 @@ showClearButton() {
   btn.textContent = "Clear Previous Journey ❌";
   btn.onclick = () => this.clearJourney();
 }
-  // -----------------------------
-  // 📅 AUTO DATE GENERATION
-  // -----------------------------
-  generateDate(index) {
-    const base = new Date();
-    base.setDate(base.getDate() - (this.places.length - index));
-    return base.toISOString().split('T')[0];
-  }
-}
 clearJourney() {
   console.log("🧹 Clearing journey...");
 
@@ -217,6 +208,16 @@ clearJourney() {
 
   alert("Journey cleared!");
 }
+  // -----------------------------
+  // 📅 AUTO DATE GENERATION
+  // -----------------------------
+  generateDate(index) {
+    const base = new Date();
+    base.setDate(base.getDate() - (this.places.length - index));
+    return base.toISOString().split('T')[0];
+  }
+}
+
 
 // INIT
 new AIExplorer();
