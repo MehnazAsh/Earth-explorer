@@ -293,6 +293,7 @@ const hop = {
   description,
   photos
 };
+  console.log(hop);
 this.hops.unshift(hop);
 this.saveHops();
 this.displayHops();
