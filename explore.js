@@ -180,7 +180,7 @@ localStorage.setItem('aiExplorePlaces', JSON.stringify(this.places));
 
   // ✅ Draw lines AFTER markers
   this.geohop.updatePolylines();
-
+this.showClearButton(); // ✅ switch button
   console.log("✅ Final hops:", this.geohop.hops);
 
   alert("✅ Journey ready! Click Play ▶");
@@ -210,6 +210,28 @@ showClearButton() {
     base.setDate(base.getDate() - (this.places.length - index));
     return base.toISOString().split('T')[0];
   }
+}
+clearJourney() {
+  console.log("🧹 Clearing journey...");
+
+  // Clear GeoHop state
+  this.geohop.clearExistingJourney();
+  this.geohop.displayHops();
+  this.geohop.updatePolylines();
+  this.geohop.updateStats();
+
+  // Clear stored AI data
+  localStorage.removeItem('aiExplorePlaces');
+
+  // Clear UI
+  document.getElementById('results').innerHTML = "";
+
+  this.places = [];
+
+  // Hide button again
+  document.getElementById('createJourneyBtn').classList.add('hidden');
+
+  alert("Journey cleared!");
 }
 
 // INIT
