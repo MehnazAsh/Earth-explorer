@@ -318,6 +318,7 @@ try {
 if (this.maps3dLibrary && this.maps3dLibrary.Marker3DElement) {
 // Use the new 3D marker
 const Marker3DElement = this.maps3dLibrary.Marker3DElement;
+  console.log("inside addmarker3D", hop);
 const marker = new Marker3DElement({
 position: { lat: hop.lat, lng: hop.lng, altitude: hop.altitude },
 altitudeMode: 'RELATIVE_TO_GROUND',
@@ -594,6 +595,7 @@ if (hop.photos?.length) {
 }
 this.showHopOverlay(hop);
 try {
+  console.log("I am in focusOnhop", hop.city)
 // Animate camera to hop location
 this.map3d.flyCameraTo({
 endCamera: {
@@ -655,12 +657,13 @@ await new Promise(resolve => setTimeout(resolve, 2000));
 const playNextHop = async () => {
 if (this.currentHopIndex < sortedHops.length && this.isPlaying) {
 const hop = sortedHops[this.currentHopIndex];
-  console.log(this.currentHopIndex);
-  console.log(hop);
+ 
+  console.log(hop.city, this.currentHopIndex);
 // Focus on the hop with label
 this.focusOnHop(hop);
 // Show hop number
-this.showNotification(`📍 Stop ${this.currentHopIndex + 1}/${sortedHops.length}: ${hop.city}, ${hop.country}`, 'info', 3000);
+//this.showNotification(`📍 Stop ${this.currentHopIndex + 1}/${sortedHops.length}: ${hop.city}, ${hop.country}`, 'info', 3000);
+  this.showNotification(`📍 Stop ${this.currentHopIndex }/${sortedHops.length}: ${hop.city}, ${hop.country}`, 'info', 4000);
 this.currentHopIndex++;
 // Schedule next hop
 setTimeout(() => playNextHop(), 5000 / this.playSpeed);
