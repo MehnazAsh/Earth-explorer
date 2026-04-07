@@ -584,7 +584,9 @@ gmp-map-3d {
   align-items: center;
   overflow: hidden;
 }
-
+.hidden {
+  display: none;
+}
 .photo-viewer.hidden {
   display: none;
 }
