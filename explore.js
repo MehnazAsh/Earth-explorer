@@ -185,7 +185,23 @@ localStorage.setItem('aiExplorePlaces', JSON.stringify(this.places));
 
   alert("✅ Journey ready! Click Play ▶");
 }
+showCreateButton() {
+  const btn = document.getElementById('createJourneyBtn');
+  if (!btn) return;
 
+  btn.classList.remove('hidden');
+  btn.textContent = "Create Journey ✈️";
+  btn.onclick = () => this.createJourney();
+}
+
+showClearButton() {
+  const btn = document.getElementById('createJourneyBtn');
+  if (!btn) return;
+
+  btn.classList.remove('hidden');
+  btn.textContent = "Clear Previous Journey ❌";
+  btn.onclick = () => this.clearJourney();
+}
   // -----------------------------
   // 📅 AUTO DATE GENERATION
   // -----------------------------
