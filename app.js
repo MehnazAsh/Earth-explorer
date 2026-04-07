@@ -399,6 +399,7 @@ prevPhoto() {
 // Show city/country overlay when focusing
 showHopOverlay(hop) {
 // Remove any existing overlay
+  console.log("I am inside showhopoverlay", hop, hop.city);
 const existingOverlay = document.querySelector('.hop-info-overlay');
 if (existingOverlay) {
 existingOverlay.remove();
@@ -655,6 +656,7 @@ const playNextHop = async () => {
 if (this.currentHopIndex < sortedHops.length && this.isPlaying) {
 const hop = sortedHops[this.currentHopIndex];
   console.log(this.currentHopIndex);
+  console.log(hop);
 // Focus on the hop with label
 this.focusOnHop(hop);
 // Show hop number
