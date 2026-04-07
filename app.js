@@ -1035,7 +1035,14 @@ this.showNotification('Viewing shared journey', 'info');
 this.showNotification('Invalid journey link', 'error');
 }
 } else {
-const saved = localStorage.getItem('geoHops3D');
+// ❌ DO NOT auto-load if coming from explore
+if (!window.location.pathname.includes("explore")) {
+  const saved = localStorage.getItem('geoHops3D');
+
+  if (saved) {
+    this.hops = JSON.parse(saved);
+  }
+}
 if (saved) {
   try {
     this.hops = JSON.parse(saved);
