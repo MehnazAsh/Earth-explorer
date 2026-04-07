@@ -1035,11 +1035,7 @@ this.showNotification('Viewing shared journey', 'info');
 this.showNotification('Invalid journey link', 'error');
 }
 } else {
-
-  const saved = localStorage.getItem('geoHops3D');
-
- 
-}
+const saved = localStorage.getItem('geoHops3D');
 if (saved) {
   try {
     this.hops = JSON.parse(saved);
