@@ -13,7 +13,7 @@ class AIExplorer {
 
     // Initialize your EXISTING GeoHop engine
     this.geohop = new GeoHop3D({ skipLoad: true });
-
+this.loadState(); // ✅ ADD THIS
     // Hook buttons
     document.getElementById('searchBtn')
       ?.addEventListener('click', () => this.search());
@@ -31,6 +31,23 @@ class AIExplorer {
       ?.addEventListener('click', () => this.geohop.resetJourney());
   }
 
+  loadState() {
+  const saved = localStorage.getItem('aiExplorePlaces');
+
+  if (saved) {
+    try {
+      this.places = JSON.parse(saved);
+
+      console.log("🔄 Restored places:", this.places);
+
+      this.renderResults(this.places);
+      this.showCreateButton();
+
+    } catch (e) {
+      console.error("Failed to restore places");
+    }
+  }
+}
   // -----------------------------
   // WAIT FOR MAPS
   // -----------------------------
@@ -69,7 +86,7 @@ class AIExplorer {
       console.log("✅ AI Results:", data);
 
       this.places = data;
-
+localStorage.setItem('aiExplorePlaces', JSON.stringify(this.places));
       this.renderResults(data);
 
     } catch (err) {
