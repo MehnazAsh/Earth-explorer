@@ -99,72 +99,75 @@ class AIExplorer {
   // 🌍 CONVERT AI → HOPS
   // -----------------------------
   async convertToHops() {
-    const geocoder = new google.maps.Geocoder();
-    const hops = [];
+  const geocoder = new google.maps.Geocoder();
+  const hops = [];
 
-    for (let i = 0; i < this.places.length; i++) {
-      const p = this.places[i];
+  for (let i = 0; i < this.places.length; i++) {
+    const p = this.places[i];
 
-      try {
-        const res = await geocoder.geocode({
-          address: `${p.place}, ${p.country}`
+    try {
+      const res = await geocoder.geocode({
+        address: `${p.place}, ${p.country}`
+      });
+
+      if (res.results[0]) {
+        const loc = res.results[0].geometry.location;
+
+        hops.push({
+          id: Date.now() + i,
+          city: p.place,
+          country: p.country,
+          lat: loc.lat(),
+          lng: loc.lng(),
+          altitude: 100,
+          order: i, // ✅ KEY FIX (AI order)
+          description: "AI discovered destination ✨"
         });
-
-        if (res.results[0]) {
-          const loc = res.results[0].geometry.location;
-
-          hops.push({
-            id: Date.now() + i,
-            city: p.place,
-            country: p.country,
-            lat: loc.lat(),
-            lng: loc.lng(),
-            altitude: 100,
-            order:i,
-            description: "AI discovered destination ✨"
-          });
-        }
-
-      } catch (err) {
-        console.warn("⚠️ Geocode failed:", p);
       }
-    }
 
-    return hops;
+    } catch (err) {
+      console.warn("⚠️ Geocode failed:", p);
+    }
   }
+
+  return hops;
+}
 
   // -----------------------------
   // ✈️ CREATE JOURNEY (KEY PART)
   // -----------------------------
   async createJourney() {
-    if (!this.places.length) {
-      alert("Search first!");
-      return;
-    }
-
-    console.log("✈️ Creating journey...");
-
-    const hops = await this.convertToHops();
-
-    // Inject into GeoHop engine
-    this.geohop.hops = hops;
-
-    // Reset existing state
-    this.geohop.markers = [];
-    this.geohop.polylines = [];
-
-    // Render using EXISTING engine
-    this.geohop.displayHops();
-    this.geohop.updatePolylines();
-    this.geohop.updateStats();
-
-    // Add markers
-    for (let hop of hops) {
-      await this.geohop.addMarker3D(hop);
-    }
-
-    alert("✅ Journey ready! Click Play ▶");
+  if (!this.places.length) {
+    alert("Search first!");
+    return;
   }
+
+  console.log("✈️ Creating journey...");
+
+  const hops = await this.convertToHops();
+
+  // ✅ HARD RESET (VERY IMPORTANT)
+  this.geohop.clearExistingJourney();
+
+  // ✅ SET CLEAN DATA
+  this.geohop.hops = hops;
+
+  // ✅ Render UI FIRST
+  this.geohop.displayHops();
+  this.geohop.updateStats();
+
+  // ✅ Add markers SEQUENTIALLY (avoid race issues)
+  for (let i = 0; i < hops.length; i++) {
+    await this.geohop.addMarker3D(hops[i]);
+  }
+
+  // ✅ Draw lines AFTER markers
+  this.geohop.updatePolylines();
+
+  console.log("✅ Final hops:", this.geohop.hops);
+
+  alert("✅ Journey ready! Click Play ▶");
+}
 
   // -----------------------------
   // 📅 AUTO DATE GENERATION
