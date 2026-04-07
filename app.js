@@ -653,6 +653,7 @@ await new Promise(resolve => setTimeout(resolve, 2000));
 const playNextHop = async () => {
 if (this.currentHopIndex < sortedHops.length && this.isPlaying) {
 const hop = sortedHops[this.currentHopIndex];
+  console.log(this.currentHopIndex);
 // Focus on the hop with label
 this.focusOnHop(hop);
 // Show hop number
