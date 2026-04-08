@@ -298,7 +298,7 @@ this.hops.unshift(hop);
 this.saveHops();
 this.displayHops();
 await this.addMarker3D(hop);
-this.updatePolylines();
+//this.updatePolylines();
 this.updateStats();
 this.clearForm();
 // Animate to the new hop
@@ -424,67 +424,67 @@ setTimeout(() => overlay.remove(), 500);
 }, 4000);
 }
 
-updatePolylines() {
-try {
-// Clear existing polylines
-this.polylines.forEach(polyline => {
-try {
-polyline.remove();
-} catch (e) {
-// Ignore removal errors
-}
-});
-this.polylines = [];
-if (this.hops.length < 2) return;
-// Sort hops by date
-const sortedHops = [...this.hops].sort((a, b) => a.order - b.order);
-// Check if we have the 3D library
-if (this.maps3dLibrary && this.maps3dLibrary.Polyline3DElement) {
-const Polyline3DElement = this.maps3dLibrary.Polyline3DElement;
-// Create polylines between consecutive hops
-for (let i = 0; i < sortedHops.length - 1; i++) {
-const startHop = sortedHops[i];
-const endHop = sortedHops[i + 1];
-// Generate curved path points
-const curvedPath = this.generateCurvedPath(startHop, endHop);
-try {
-// Create main arc polyline
-const arcPolyline = new Polyline3DElement({
-coordinates: curvedPath,
-altitudeMode: 'RELATIVE_TO_GROUND',
-strokeColor: '#667eea',
-strokeWidth: 4,
-geodesic: false,
-strokeOpacity: 0.8
-});
-this.map3d.appendChild(arcPolyline);
-this.polylines.push(arcPolyline);
-} catch (e) {
-console.error('Error creating polyline:', e);
-}
-}
-} else {
-// Fallback: Create custom polyline elements
-console.log('Using fallback polyline creation');
-for (let i = 0; i < sortedHops.length - 1; i++) {
-const startHop = sortedHops[i];
-const endHop = sortedHops[i + 1];
-const polyline = document.createElement('gmp-polyline-3d');
-polyline.coordinates = [
-{ lat: startHop.lat, lng: startHop.lng, altitude: 50000 },
-{ lat: endHop.lat, lng: endHop.lng, altitude: 50000 }
-];
-polyline.altitudeMode = 'RELATIVE_TO_GROUND';
-polyline.strokeColor = '#667eea';
-polyline.strokeWidth = 4;
-this.map3d.appendChild(polyline);
-this.polylines.push(polyline);
-}
-}
-} catch (error) {
-console.error('Error updating polylines:', error);
-}
-}
+// updatePolylines() {
+// try {
+// // Clear existing polylines
+// this.polylines.forEach(polyline => {
+// try {
+// polyline.remove();
+// } catch (e) {
+// // Ignore removal errors
+// }
+// });
+// this.polylines = [];
+// if (this.hops.length < 2) return;
+// // Sort hops by date
+// const sortedHops = [...this.hops].sort((a, b) => a.order - b.order);
+// // Check if we have the 3D library
+// if (this.maps3dLibrary && this.maps3dLibrary.Polyline3DElement) {
+// const Polyline3DElement = this.maps3dLibrary.Polyline3DElement;
+// // Create polylines between consecutive hops
+// for (let i = 0; i < sortedHops.length - 1; i++) {
+// const startHop = sortedHops[i];
+// const endHop = sortedHops[i + 1];
+// // Generate curved path points
+// const curvedPath = this.generateCurvedPath(startHop, endHop);
+// try {
+// // Create main arc polyline
+// const arcPolyline = new Polyline3DElement({
+// coordinates: curvedPath,
+// altitudeMode: 'RELATIVE_TO_GROUND',
+// strokeColor: '#667eea',
+// strokeWidth: 4,
+// geodesic: false,
+// strokeOpacity: 0.8
+// });
+// this.map3d.appendChild(arcPolyline);
+// this.polylines.push(arcPolyline);
+// } catch (e) {
+// console.error('Error creating polyline:', e);
+// }
+// }
+// } else {
+// // Fallback: Create custom polyline elements
+// console.log('Using fallback polyline creation');
+// for (let i = 0; i < sortedHops.length - 1; i++) {
+// const startHop = sortedHops[i];
+// const endHop = sortedHops[i + 1];
+// const polyline = document.createElement('gmp-polyline-3d');
+// polyline.coordinates = [
+// { lat: startHop.lat, lng: startHop.lng, altitude: 50000 },
+// { lat: endHop.lat, lng: endHop.lng, altitude: 50000 }
+// ];
+// polyline.altitudeMode = 'RELATIVE_TO_GROUND';
+// polyline.strokeColor = '#667eea';
+// polyline.strokeWidth = 4;
+// this.map3d.appendChild(polyline);
+// this.polylines.push(polyline);
+// }
+// }
+// } catch (error) {
+// console.error('Error updating polylines:', error);
+// }
+// }
 
 // Generate curved path between two hops
 generateCurvedPath(startHop, endHop) {
@@ -622,83 +622,58 @@ item.classList.add('active');
 }
 
 async playJourney() {
-if (this.hops.length === 0) {
-this.showNotification('No hops to play!', 'error');
-return;
+  if (this.hops.length === 0) {
+    this.showNotification('No hops to play!', 'error');
+    return;
+  }
+
+  // ❗ STOP any existing play loop
+  this.pauseJourney();
+
+  this.isPlaying = true;
+  this.currentHopIndex = 0;
+
+  const sortedHops = [...this.hops].sort((a, b) => a.order - b.order);
+
+  const playNextHop = async () => {
+    // ❗ safety guard
+    if (!this.isPlaying) return;
+
+    if (this.currentHopIndex >= sortedHops.length) {
+      this.pauseJourney();
+      this.showNotification('🎉 Journey complete!', 'success');
+      return;
+    }
+
+    const hop = sortedHops[this.currentHopIndex];
+
+    console.log("▶️ Playing:", hop.city, this.currentHopIndex);
+
+    this.focusOnHop(hop);
+
+    this.showNotification(
+      `📍 Stop ${this.currentHopIndex + 1}/${sortedHops.length}: ${hop.city}`,
+      'info',
+      3000
+    );
+
+    this.currentHopIndex++;
+
+    // ✅ store timeout so we can cancel later
+    this.playTimeout = setTimeout(playNextHop, 4000 / this.playSpeed);
+  };
+
+  playNextHop();
 }
-this.isPlaying = true;
-this.currentHopIndex = 0;
-// Update buttons
-const playBtn = document.getElementById('playBtn');
-const pauseBtn = document.getElementById('pauseBtn');
-if (playBtn) playBtn.disabled = true;
-if (pauseBtn) pauseBtn.disabled = false;
-// Sort hops by date
-const sortedHops = [...this.hops].sort((a, b) => a.order - b.order);
-try {
-// Start with globe view
-await this.map3d.flyCameraTo({
-endCamera: {
-center: { lat: 20, lng: 0, altitude: 10000 },
-range: 20000000,
-tilt: 45,
-heading: 0
-},
-durationMillis: 2000
-});
-} catch (error) {
-console.error('Error setting globe view:', error);
-}
-// Show journey start notification
-this.showNotification('🚀 Starting your journey...', 'info', 3000);
-// Wait a moment at globe view
-await new Promise(resolve => setTimeout(resolve, 2000));
-// Play through each hop
-const playNextHop = async () => {
-  console.log("inside playnexthop");
-  console.log(this.currentHopIndex, this.sortedHops);
-if (this.currentHopIndex < sortedHops.length && this.isPlaying) {
-const hop = sortedHops[this.currentHopIndex];
- 
-  console.log(hop.city, this.currentHopIndex);
-// Focus on the hop with label
-this.focusOnHop(hop);
-// Show hop number
-//this.showNotification(`📍 Stop ${this.currentHopIndex + 1}/${sortedHops.length}: ${hop.city}, ${hop.country}`, 'info', 3000);
-  this.showNotification(`📍 Stop ${this.currentHopIndex }/${sortedHops.length}: ${hop.city}, ${hop.country}`, 'info', 4000);
-this.currentHopIndex++;
-// Schedule next hop
-setTimeout(() => playNextHop(), 5000 / this.playSpeed);
-} 
-else {
-// Journey complete
-this.pauseJourney();
-// Return to globe view
-try {
-await this.map3d.flyCameraTo({
-endCamera: {
-center: { lat: 20, lng: 0, altitude: 0 },
-range: 15000000,
-tilt: 0,
-heading: 0
-},
-durationMillis: 3000
-});
-} catch (error) {
-console.error('Error returning to globe view:', error);
-}
-this.showNotification('🎉 Journey complete! You visited ' + sortedHops.length + ' amazing places!', 'success', 5000);
-}
-};
-playNextHop();
-}
+
+
 
 pauseJourney() {
 this.isPlaying = false;
-if (this.playInterval) {
-clearInterval(this.playInterval);
-this.playInterval = null;
-}
+ if (this.playTimeout) {
+    clearTimeout(this.playTimeout);
+    this.playTimeout = null;
+  }
 const playBtn = document.getElementById('playBtn');
 const pauseBtn = document.getElementById('pauseBtn');
 if (playBtn) playBtn.disabled = false;
@@ -805,7 +780,7 @@ this.markers.splice(markerIndex, 1);
 // Update everything
 this.saveHops();
 this.displayHops();
-this.updatePolylines();
+//this.updatePolylines();
 this.updateStats();
 this.showNotification('Hop deleted', 'success');
 }

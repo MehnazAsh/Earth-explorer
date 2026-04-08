@@ -250,11 +250,11 @@ async focusOnPlace(place) {
 
     // Reset existing state
     this.geohop.markers = [];
-    this.geohop.polylines = [];
+    //this.geohop.polylines = [];
 
     // Render using EXISTING engine
     this.geohop.displayHops();
-    this.geohop.updatePolylines();
+    //this.geohop.updatePolylines();
     this.geohop.updateStats();
 
     // Add markers
