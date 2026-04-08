@@ -10,7 +10,7 @@ class AIExplorer {
 
   async init() {
     console.log("🚀 AI Explorer Init");
-
+console.log("SearchHistory import:", SearchHistory);
     // Wait for Google Maps
     await this.waitForMaps();
 
