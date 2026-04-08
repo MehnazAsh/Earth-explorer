@@ -4,6 +4,7 @@ class AIExplorer {
     this.places = [];
     this.geohop = null;
     this.init();
+    this.history = new SearchHistory('searchHistory');
   }
 
   async init() {
@@ -30,6 +31,9 @@ class AIExplorer {
 
     document.getElementById('resetBtn')
       ?.addEventListener('click', () => this.geohop.resetJourney());
+    this.history.render((selected) => {
+  this.restoreSearch(selected);
+});
   }
 
   // -----------------------------
@@ -70,15 +74,26 @@ class AIExplorer {
       console.log("✅ AI Results:", data);
 
       this.places = data;
-
+  this.history.save(query, data);
       this.renderResults(data);
+      // ✅ Render history UI
+this.history.render((selected) => {
+  this.restoreSearch(selected);
+});
 
     } catch (err) {
       console.error("❌ Search failed:", err);
       alert("Search failed. Check backend.");
     }
   }
+restoreSearch(selected) {
+  console.log("🔄 Restoring:", selected.query);
 
+  this.places = selected.results;
+
+  this.renderResults(this.places);
+  
+}
   // -----------------------------
   // 🎨 RENDER RESULTS (styled)
   // -----------------------------
