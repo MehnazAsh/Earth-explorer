@@ -18,7 +18,16 @@ class AIExplorer {
 
     // Initialize your EXISTING GeoHop engine
     this.geohop = new GeoHop3D({ skipLoad: true });
+ const saved = localStorage.getItem('aiExplorePlaces');
 
+  if (saved) {
+    this.places = JSON.parse(saved);
+
+    console.log("🔄 Restored previous search:", this.places);
+
+    this.renderResults(this.places);
+    
+  }
     // Hook buttons
     document.getElementById('searchBtn')
       ?.addEventListener('click', () => this.search());
@@ -66,6 +75,8 @@ class AIExplorer {
     console.log("🔍 Searching:", query);
 
     try {
+      this.clearPreviousJourney();
+
       const res = await fetch('/api/explore', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -78,6 +89,7 @@ class AIExplorer {
 
       this.places = data;
   //this.history.save(query, data);
+      localStorage.setItem('aiExplorePlaces', JSON.stringify(this.places));
       this.renderResults(data);
       // ✅ Render history UI
 //this.history.render((selected) => {
@@ -96,6 +108,20 @@ restoreSearch(selected) {
 
   this.renderResults(this.places);
   
+}
+  clearPreviousJourney() {
+  console.log("🧹 Clearing previous journey");
+
+  this.places = [];
+
+  localStorage.removeItem('aiExplorePlaces');
+
+  document.getElementById('results').innerHTML = '';
+
+  // Clear map
+  if (this.geohop) {
+    this.geohop.clearExistingJourney();
+  }
 }
   // -----------------------------
   // 🎨 RENDER RESULTS (styled)
