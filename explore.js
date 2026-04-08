@@ -1,4 +1,5 @@
 import SearchHistory from './js/searchHistory.js';
+
 class AIExplorer {
   constructor() {
     this.places = [];
