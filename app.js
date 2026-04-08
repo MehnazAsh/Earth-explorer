@@ -587,7 +587,7 @@ enableDragAndDrop() {
   });
 }
 // Enhanced focusOnHop with labels
-focusOnHop(hop, customRange = 10000000){
+focusOnHop(hop){
 if (!this.map3d) return;
 // Show the city/country overlay
 if (hop.photos?.length) {
@@ -601,7 +601,7 @@ this.map3d.flyCameraTo({
 endCamera: {
 center: { lat: hop.lat, lng: hop.lng, altitude: 100000 },
 tilt: 10,
-range: customRange,
+range: 10000000,
 heading: 0
 },
 durationMillis: 5000
@@ -646,21 +646,14 @@ async playJourney() {
     }
 
     const hop = sortedHops[this.currentHopIndex];
-const prevHop = sortedHops[this.currentHopIndex - 1];
+
 
 console.log("▶️ Playing:", hop.city, this.currentHopIndex);
 
-// 🎯 Decide zoom based on country
-let range = 10000000;
-    console.log("prevhop and hop", prevHop.country, hop.country);
 
-if (prevHop && prevHop.country === hop.country) {
-  range = 4000000; // zoom in if same country
-   console.log("check if prevhop equal is eqal to hop country", prevHop.country, hop.country);
-}
 
 // ✅ Pass zoom to focus function
-this.focusOnHop(hop, range);
+this.focusOnHop(hop);
 
     this.showNotification(
       `📍 Stop ${this.currentHopIndex + 1}/${sortedHops.length}: ${hop.city}`,
