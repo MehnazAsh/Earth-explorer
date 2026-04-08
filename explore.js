@@ -1,16 +1,18 @@
 import SearchHistory from './js/searchHistory.js';
+console.log("SearchHistory import:", SearchHistory);
 
 class AIExplorer {
   constructor() {
     this.places = [];
     this.geohop = null;
-    this.init();
     this.history = new SearchHistory('searchHistory');
+    this.init();
+    
   }
 
   async init() {
     console.log("🚀 AI Explorer Init");
-console.log("SearchHistory import:", SearchHistory);
+
     // Wait for Google Maps
     await this.waitForMaps();
 
