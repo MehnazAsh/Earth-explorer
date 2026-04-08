@@ -652,9 +652,11 @@ console.log("▶️ Playing:", hop.city, this.currentHopIndex);
 
 // 🎯 Decide zoom based on country
 let range = 10000000;
+    console.log("prevhop and hop", prevHop.country, hop.country);
 
 if (prevHop && prevHop.country === hop.country) {
   range = 4000000; // zoom in if same country
+   console.log("check if prevhop equal is eqal to hop country", prevHop.country, hop.country);
 }
 
 // ✅ Pass zoom to focus function
