@@ -1,11 +1,11 @@
-import SearchHistory from './js/searchHistory.js';
-console.log("SearchHistory import:", SearchHistory);
+//import SearchHistory from './js/searchHistory.js';
+//console.log("SearchHistory import:", SearchHistory);
 
 class AIExplorer {
   constructor() {
     this.places = [];
     this.geohop = null;
-    this.history = new SearchHistory('searchHistory');
+    //this.history = new SearchHistory('searchHistory');
     this.init();
     
   }
@@ -34,9 +34,9 @@ class AIExplorer {
 
     document.getElementById('resetBtn')
       ?.addEventListener('click', () => this.geohop.resetJourney());
-    this.history.render((selected) => {
-  this.restoreSearch(selected);
-});
+    //this.history.render((selected) => {
+  //this.restoreSearch(selected);
+//});
   }
 
   // -----------------------------
@@ -80,9 +80,9 @@ class AIExplorer {
   this.history.save(query, data);
       this.renderResults(data);
       // ✅ Render history UI
-this.history.render((selected) => {
-  this.restoreSearch(selected);
-});
+//this.history.render((selected) => {
+  //this.restoreSearch(selected);
+//});
 
     } catch (err) {
       console.error("❌ Search failed:", err);
