@@ -264,7 +264,13 @@ async focusOnPlace(place) {
 
     alert("✅ Journey ready! Click Play ▶");
   }
-
+getZoomLevel(distanceKm) {
+  if (distanceKm < 50) return 200000;       // city-level
+  if (distanceKm < 200) return 500000;      // regional
+  if (distanceKm < 1000) return 1500000;    // country
+  if (distanceKm < 3000) return 4000000;    // continent
+  return 10000000;                          // global
+}
   // -----------------------------
   // 📅 AUTO DATE GENERATION
   // -----------------------------
