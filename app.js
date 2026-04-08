@@ -596,37 +596,21 @@ if (hop.photos?.length) {
 this.showHopOverlay(hop);
 try {
   console.log("I am in focusOnhop", hop.city)
-   const sortedHops = [...this.hops].sort((a, b) => a.order - b.order);
-    const prevHop = sortedHops[this.currentHopIndex - 1];
-
-    let distance = 0;
-    if (prevHop) {
-      distance = this.calculateDistance(prevHop, hop);
-    }
-
-    const range = this.getZoomLevel(distance);
 // Animate camera to hop location
 this.map3d.flyCameraTo({
 endCamera: {
 center: { lat: hop.lat, lng: hop.lng, altitude: 100000 },
 tilt: 10,
-range: range,
+range: 10000000,
 heading: 0
 },
-durationMillis: 3000
+durationMillis: 5000
 });
 } catch (error) {
 console.error('Error focusing on hop:', error);
 // Fallback: just set the center
 this.map3d.center = { lat: hop.lat, lng: hop.lng, altitude: 0 };
 this.map3d.range = 8000;
-  // Highlight sidebar
-  document.querySelectorAll('.hop-item').forEach(item => {
-    item.classList.remove('active');
-    if (parseInt(item.dataset.hopId) === hop.id) {
-      item.classList.add('active');
-    }
-  });
 }
 // Highlight in sidebar
 document.querySelectorAll('.hop-item').forEach(item => {
