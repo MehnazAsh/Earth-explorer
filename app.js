@@ -5,7 +5,7 @@ this.skipLoad = options.skipLoad || false;
 this.map3d = null;
 this.hops = [];
 this.markers = [];
-this.polylines = [];
+//this.polylines = [];
 this.labels = [];
 this.animatedLines = [];
 this.isPlaying = false;
@@ -953,10 +953,10 @@ clearExistingJourney() {
   this.markers = [];
 
   // Remove polylines
-  this.polylines.forEach(p => {
-    try { p.remove(); } catch(e) {}
-  });
-  this.polylines = [];
+  // this.polylines.forEach(p => {
+  //   try { p.remove(); } catch(e) {}
+  // });
+  // this.polylines = [];
 
   this.hops = [];
 }
@@ -1048,7 +1048,7 @@ this.hops = [];
 }
 this.displayHops();
 this.hops.forEach(hop => this.addMarker3D(hop));
-this.updatePolylines();
+//this.updatePolylines();
 this.updateStats();
 }
 }
