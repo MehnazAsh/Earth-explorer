@@ -655,6 +655,8 @@ this.showNotification('🚀 Starting your journey...', 'info', 3000);
 await new Promise(resolve => setTimeout(resolve, 2000));
 // Play through each hop
 const playNextHop = async () => {
+  console.log("inside playnexthop");
+  console.log(this.currentHopIndex, this.sortedHops);
 if (this.currentHopIndex < sortedHops.length && this.isPlaying) {
 const hop = sortedHops[this.currentHopIndex];
  
@@ -667,7 +669,8 @@ this.focusOnHop(hop);
 this.currentHopIndex++;
 // Schedule next hop
 setTimeout(() => playNextHop(), 5000 / this.playSpeed);
-} else {
+} 
+else {
 // Journey complete
 this.pauseJourney();
 // Return to globe view
