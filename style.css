@@ -733,3 +733,12 @@ gmp-marker-3d {
 .hop-item.dragging {
   opacity: 0.5;
 }
+.result-card {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.result-card:hover {
+  transform: scale(1.03);
+  background: rgba(255,255,255,0.1);
+}
