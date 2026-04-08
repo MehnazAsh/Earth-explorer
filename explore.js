@@ -77,7 +77,7 @@ class AIExplorer {
       console.log("✅ AI Results:", data);
 
       this.places = data;
-  this.history.save(query, data);
+  //this.history.save(query, data);
       this.renderResults(data);
       // ✅ Render history UI
 //this.history.render((selected) => {
