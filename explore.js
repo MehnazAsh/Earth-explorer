@@ -82,18 +82,28 @@ class AIExplorer {
   // 🎨 RENDER RESULTS (styled)
   // -----------------------------
   renderResults(places) {
-    const container = document.getElementById('results');
+  const container = document.getElementById('results');
 
-    container.innerHTML = places.map((p, i) => `
-      <div class="result-card">
-        <div class="result-rank">#${i + 1}</div>
-        <div class="result-content">
-          <div class="result-place">${p.place}</div>
-          <div class="result-country">${p.country}</div>
-        </div>
+  container.innerHTML = places.map((p, i) => `
+    <div class="result-card" data-index="${i}">
+      <div class="result-rank">#${i + 1}</div>
+      <div class="result-content">
+        <div class="result-place">${p.place}</div>
+        <div class="result-country">${p.country}</div>
       </div>
-    `).join('');
-  }
+    </div>
+  `).join('');
+
+  // ✅ ADD CLICK LISTENERS
+  document.querySelectorAll('.result-card').forEach(card => {
+    card.addEventListener('click', async () => {
+      const index = parseInt(card.dataset.index);
+      const place = this.places[index];
+
+      await this.focusOnPlace(place);
+    });
+  });
+}
 
   // -----------------------------
   // 🌍 CONVERT AI → HOPS
@@ -132,7 +142,45 @@ class AIExplorer {
 
     return hops;
   }
+async focusOnPlace(place) {
+  if (!this.geohop || !this.geohop.map3d) return;
 
+  const geocoder = new google.maps.Geocoder();
+
+  try {
+    const res = await geocoder.geocode({
+      address: `${place.place}, ${place.country}`
+    });
+
+    if (!res.results[0]) return;
+
+    const loc = res.results[0].geometry.location;
+
+    // ✅ Same behavior as index.html
+    this.geohop.map3d.flyCameraTo({
+      endCamera: {
+        center: {
+          lat: loc.lat(),
+          lng: loc.lng(),
+          altitude: 100000
+        },
+        tilt: 20,
+        range: 8000000
+      },
+      durationMillis: 2500
+    });
+
+    // ✅ Optional: show overlay like index page
+    this.geohop.showHopOverlay({
+      city: place.place,
+      country: place.country,
+      description: "AI suggested destination ✨"
+    });
+
+  } catch (err) {
+    console.error("❌ Failed to focus on place:", place);
+  }
+}
   // -----------------------------
   // ✈️ CREATE JOURNEY (KEY PART)
   // -----------------------------
