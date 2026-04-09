@@ -2,6 +2,12 @@
 class GeoHop3D {
 constructor(options = {}) {
 this.skipLoad = options.skipLoad || false;
+this.zoomConfig = {
+    default: 10000000,
+    sameCountry: 4000000,
+    differentCountry: 12000000,
+    ...options.zoomConfig
+  };
 this.map3d = null;
 this.hops = [];
 this.markers = [];
@@ -587,21 +593,21 @@ enableDragAndDrop() {
   });
 }
 // Enhanced focusOnHop with labels
-focusOnHop(hop) {
+focusOnHop(hop,customRange = this.zoomConfig.default) {
 if (!this.map3d) return;
 // Show the city/country overlay
-if (hop.photos?.length) {
-  this.openPhotoViewer(hop.photos);
-}
+// if (hop.photos?.length) {
+//   this.openPhotoViewer(hop.photos);
+// }
 this.showHopOverlay(hop);
 try {
-  console.log("I am in focusOnhop", hop.city)
+  console.log("I am in focusOnhop with range", customRange);
 // Animate camera to hop location
 this.map3d.flyCameraTo({
 endCamera: {
 center: { lat: hop.lat, lng: hop.lng, altitude: 100000 },
 tilt: 10,
-range: 10000000,
+range: customRange,
 heading: 0
 },
 durationMillis: 5000
@@ -646,12 +652,26 @@ async playJourney() {
     }
 
     const hop = sortedHops[this.currentHopIndex];
+    let range = this.zoomConfig.default;
+    if(this.currentHopIndex > 0) {
 const prevHop = sortedHops[this.currentHopIndex - 1];
+console.log( "this hop", hop.country, "prev hop", prevHop.country);
 
+
+if (prevHop) {
+  if (prevHop.country.toLowerCase() === hop.country.toLowerCase()) {
+    range = this.zoomConfig.sameCountry;
+    console.log("Zooming in closer for same country");
+  } else {
+    range = this.zoomConfig.differentCountry;
+    console.log("Zooming out for different country");
+  }
+}
+}
 
 
 // ✅ Pass zoom to focus function
-this.focusOnHop(hop);
+this.focusOnHop(hop, range);
 
     this.showNotification(
       `📍 Stop ${this.currentHopIndex + 1}/${sortedHops.length}: ${hop.city}`,
@@ -955,10 +975,10 @@ clearExistingJourney() {
   this.markers = [];
 
   // Remove polylines
-  this.polylines.forEach(p => {
-    try { p.remove(); } catch(e) {}
-  });
-  this.polylines = [];
+  // this.polylines.forEach(p => {
+  //   try { p.remove(); } catch(e) {}
+  // });
+  // this.polylines = [];
 
   this.hops = [];
 }
@@ -1050,7 +1070,7 @@ this.hops = [];
 }
 this.displayHops();
 this.hops.forEach(hop => this.addMarker3D(hop));
-this.updatePolylines();
+//this.updatePolylines();
 this.updateStats();
 }
 }
@@ -1074,6 +1094,12 @@ let geohop;
 document.addEventListener('DOMContentLoaded', () => {
 console.log('DOM loaded, initializing GeoHop...');
 if (document.getElementById('addHopForm')) {
-    geohop = new GeoHop3D();
+    geohop = new GeoHop3D({
+  zoomConfig: {
+    default: 9000000,
+    sameCountry: 3000000,
+    differentCountry: 14000000
+  }
+});
   }
 });
