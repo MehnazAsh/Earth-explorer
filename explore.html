@@ -49,7 +49,15 @@
 
   <!-- HEADER -->
   <header class="header">
-    <h1>🔍 AI Travel Explorer</h1>
+    <div class="logo">
+                <span class="logo-icon">🌍</span>
+                <h1>GeoHop</h1>
+            </div>
+     <div class="user-info">
+                <span id="userName">Geo Explorer</span>
+                <a href="/index.html">Create my Journey</a>
+                <button class="btn-icon" id="viewModeBtn" title="Toggle View">🌐</button>
+            </div>
   </header>
 
   <div class="main-layout">
@@ -72,8 +80,11 @@
 
         <!-- CTA -->
         <button id="createJourneyBtn" class="btn btn-primary" style="margin-top:20px;">
-          Create Journey ✈️
+          Explore ✈️
         </button>
+        <button id="shareExplorationBtn" class="btn btn-primary" style="margin-top:10px; display:none;">
+  🔗 Share my exploration
+</button>
 
       </div> -->
     </aside>
@@ -96,15 +107,46 @@
         <button id="playBtn">▶ Play</button>
         <button id="pauseBtn">⏸ Pause</button>
         <button id="resetBtn">⏮ Reset</button>
+        
+        
       </div>
-
+          <div class="modal" id="shareModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Share Your Journey</h2>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Share your travel journey with friends and family:</p>
+                <div class="share-link-container">
+                    <input type="text" id="shareLink" readonly class="share-link">
+                    <button class="btn btn-copy" id="copyBtn">Copy</button>
+                </div>
+                <!-- <div class="share-options">
+                    <button class="share-btn" id="shareWhatsApp">WhatsApp</button>
+                    <button class="share-btn" id="shareTwitter">Twitter</button>
+                    <button class="share-btn" id="shareFacebook">Facebook</button>
+                </div> -->
+            </div>
+        </div>
+    </div>
+    
     </main>
 
   </div>
 
 </div>
 
-
+<div id="shareModal" class="modal">
+  <div class="modal-content">
+    <span id="closeShareModal" class="close">&times;</span>
+    <h3>Share your exploration</h3>
+    <input id="shareLink" readonly style="width:100%; padding:10px; margin-top:10px;" />
+    <button id="copyShareBtn" class="btn btn-primary" style="margin-top:10px;">
+      Copy Link
+    </button>
+  </div>
+</div>
 
 <!-- Google Maps -->
 <script async defer

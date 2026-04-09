@@ -357,6 +357,20 @@ gmp-map-3d {
 
 /* Map Controls */
 .map-controls {
+    /* position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    gap: 1rem;
+    z-index: 100; */
+
+    .map-controls {
     position: absolute;
     bottom: 2rem;
     left: 50%;
@@ -369,6 +383,7 @@ gmp-map-3d {
     display: flex;
     gap: 1rem;
     z-index: 100;
+}
 }
 
 .control-group {
