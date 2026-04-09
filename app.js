@@ -5,7 +5,7 @@ this.skipLoad = options.skipLoad || false;
 this.zoomConfig = {
     default: 10000000,
     sameCountry: 4000000,
-    differentCountry: 12000000,
+    differentCountry: 9000000,
     ...options.zoomConfig
   };
 this.map3d = null;
