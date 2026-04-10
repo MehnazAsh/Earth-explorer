@@ -2,11 +2,11 @@
 <html>
 <head>
   <title>GeoHop AI Explore</title>
-  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" type="text/css" href="./style.css" />
 
-  <style>
+   <style>
     /* Layout fix if not already in your CSS */
-    .main-layout {
+    /* .main-layout {
       display: flex;
       height: calc(100vh - 80px);
     }
@@ -16,31 +16,31 @@
       overflow-y: auto;
       border-right: 1px solid #eee;
       background: #fafafa;
-    }
+    } */
 
-    .map-container {
+    /* .map-container {
       width: 65%;
       position: relative;
-    }
+    } */
 
-    .map-controls {
+    /* .map-controls {
       position: absolute;
       bottom: 20px;
       left: 20px;
       display: flex;
       gap: 10px;
       z-index: 1000;
-    }
+    } */
 
-    .map-controls button {
+    /* .map-controls button {
       padding: 10px 15px;
       border-radius: 8px;
       border: none;
       background: #667eea;
       color: white;
       cursor: pointer;
-    }
-  </style>
+    } */
+  </style> 
 </head>
 
 <body>
@@ -49,7 +49,15 @@
 
   <!-- HEADER -->
   <header class="header">
-    <h1>🔍 AI Travel Explorer</h1>
+     <div class="logo">
+                <span class="logo-icon">🌍</span>
+                <h1>GeoHop</h1>
+            </div>
+     <div class="user-info">
+                <span id="userName">Geo Explorer</span>
+                <a href="/index.html">Create my Journey</a>
+                <button class="btn-icon" id="viewModeBtn" title="Toggle View">🌐</button>
+            </div>
   </header>
 
   <div class="main-layout">
@@ -75,7 +83,7 @@
           Create Journey ✈️
         </button>
 
-      </div> -->
+      </div> 
     </aside>
 
     <!-- RIGHT COLUMN -->
@@ -93,9 +101,20 @@
 
       <!-- CONTROLS -->
       <div class="map-controls">
-        <button id="playBtn">▶ Play</button>
-        <button id="pauseBtn">⏸ Pause</button>
-        <button id="resetBtn">⏮ Reset</button>
+        <div class="control-group">
+                        <button class="control-btn" id="playBtn" title="Play Journey">
+                            <span class="icon">▶</span>
+                            <span class="label">Play</span>
+                        </button>
+                        <button class="control-btn" id="pauseBtn" title="Pause" disabled>
+                            <span class="icon">⏸</span>
+                            <span class="label">Pause</span>
+                        </button>
+                        <button class="control-btn" id="resetBtn" title="Reset">
+                            <span class="icon">⏮</span>
+                            <span class="label">Reset</span>
+                        </button>
+                    </div>
       </div>
 
     </main>

@@ -3,9 +3,9 @@ class GeoHop3D {
 constructor(options = {}) {
 this.skipLoad = options.skipLoad || false;
 this.zoomConfig = {
-    default: 10000000,
+    default: 9000000,
     sameCountry: 4000000,
-    differentCountry: 12000000,
+    differentCountry: 8000000,
     ...options.zoomConfig
   };
 this.map3d = null;
@@ -1098,7 +1098,7 @@ if (document.getElementById('addHopForm')) {
   zoomConfig: {
     default: 9000000,
     sameCountry: 3000000,
-    differentCountry: 14000000
+    differentCountry: 8000000
   }
 });
   }
