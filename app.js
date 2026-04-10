@@ -204,7 +204,7 @@ document.getElementById('sidebar')?.classList.toggle('collapsed');
 document.getElementById('shareBtn')?.addEventListener('click', () => this.openShareModal());
 document.getElementById('closeModal')?.addEventListener('click', () => this.closeShareModal());
 document.getElementById('copyBtn')?.addEventListener('click', () => this.copyShareLink());
-document.getElementById('shareExplorationBtn')?.addEventListener('click', () => this.openExploreModal());
+//document.getElementById('shareExplorationBtn')?.addEventListener('click', () => this.openExploreModal());
 // Social share buttons
 document.getElementById('shareWhatsApp')?.addEventListener('click', () => this.shareOnWhatsApp());
 document.getElementById('shareTwitter')?.addEventListener('click', () => this.shareOnTwitter());
@@ -853,25 +853,25 @@ console.log("sharelinkEl", shareLinkEl);
 if (shareLinkEl) shareLinkEl.value = shareUrl;
 }
 
-openExploreModal() {
- const name = document.getElementById('journeyNameInput').value || "My Journey";
+// openExploreModal() {
+//  const name = document.getElementById('journeyNameInput').value || "My Journey";
 
-  const payload = {
-    name,
-    hops: this.hops
-  };
-  const encoded = btoa(
-  encodeURIComponent(JSON.stringify(payload))
-);
+//   const payload = {
+//     name,
+//     hops: this.hops
+//   };
+//   const encoded = btoa(
+//   encodeURIComponent(JSON.stringify(payload))
+// );
 
-  const url = `${window.location.origin}/explore.html?journey=${encoded}`;
+//   const url = `${window.location.origin}/explore.html?journey=${encoded}`;
 
-  const modal = document.getElementById('shareModal');
-  const input = document.getElementById('shareLink');
+//   const modal = document.getElementById('shareModal');
+//   const input = document.getElementById('shareLink');
 
-  input.value = url;
-  modal.style.display = 'block';
-}
+//   input.value = url;
+//   modal.style.display = 'block';
+// }
 
 
 closeShareModal() {
