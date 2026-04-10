@@ -293,9 +293,9 @@ async focusOnPlace(place) {
     for (let hop of hops) {
       await this.geohop.addMarker3D(hop);
     }
-
+document.getElementById('shareExplorationBtn').style.display = 'block';
     alert("✅ Journey ready! Click Play ▶");
-     document.getElementById('shareExplorationBtn').style.display = 'block';
+     
   }
 
   // -----------------------------
