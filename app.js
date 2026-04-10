@@ -1065,7 +1065,7 @@ this.hops = data.hops || [];
 // }
 
 // Optional: show message
-this.showNotification(`Viewing: ${data.name}`, 'info');
+//this.showNotification(`Viewing: ${data.name}`, 'info');
 const userNameEl = document.getElementById('userName');
 if (userNameEl) userNameEl.textContent = data.user || 'Shared Journey';
 const addHopSection = document.querySelector('.add-hop-section');
