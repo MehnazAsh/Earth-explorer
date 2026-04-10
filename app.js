@@ -860,7 +860,9 @@ openExploreModal() {
     name,
     hops: this.hops
   };
-  const encoded = btoa(JSON.stringify(payload));
+  const encoded = btoa(
+  encodeURIComponent(JSON.stringify(payload))
+);
 
   const url = `${window.location.origin}/explore.html?journey=${encoded}`;
 
@@ -1054,7 +1056,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const journeyData = urlParams.get('journey');
 if (journeyData) {
 try {
-const data = JSON.parse(atob(journeyData));
+const data = JSON.parse(decodeBase64Unicode(journeyData));
 this.hops = data.hops || [];
 // ✅ Set journey name
 if (data.name) {
