@@ -843,8 +843,8 @@ if (modal) modal.classList.add('active');
 
 // Generate share link
 const shareData = btoa(JSON.stringify({
-hops: this.hops
-//user: document.getElementById('userName')?.textContent || 'GeoHop User'
+hops: this.hops,
+user: document.getElementById('userName')?.textContent || 'GeoHop User'
 }));
 //console.log("hops", this.hops, "user is ", user)
 const shareUrl = `${window.location.origin}${window.location.pathname}?journey=${shareData}`;
