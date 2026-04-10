@@ -204,7 +204,7 @@ document.getElementById('sidebar')?.classList.toggle('collapsed');
 document.getElementById('shareBtn')?.addEventListener('click', () => this.openShareModal());
 document.getElementById('closeModal')?.addEventListener('click', () => this.closeShareModal());
 document.getElementById('copyBtn')?.addEventListener('click', () => this.copyShareLink());
-document.getElementById('shareExplorationBtn')?.addEventListener('click', () => this.openEXploreModal());
+document.getElementById('shareExplorationBtn')?.addEventListener('click', () => this.openExploreModal());
 // Social share buttons
 document.getElementById('shareWhatsApp')?.addEventListener('click', () => this.shareOnWhatsApp());
 document.getElementById('shareTwitter')?.addEventListener('click', () => this.shareOnTwitter());
