@@ -54,6 +54,37 @@ class AIExplorer {
 //});
   }
 
+  
+
+
+
+openShareExploreModal() {
+const modal = document.getElementById('shareExploreModal');
+if (modal) modal.classList.add('active');
+// Generate share link
+const shareData = btoa(JSON.stringify({
+hops: this.hops,
+//user: document.getElementById('userName')?.textContent || 'GeoHop User'
+}));
+
+const shareUrl = `${window.location.origin}${window.location.pathname}?journey=${shareData}`;
+const shareLinkEl = document.getElementById('shareExploreLink');
+if (shareLinkEl) shareLinkEl.value = shareUrl;
+}
+
+closeShareExploreModal() {
+const modal = document.getElementById('shareExploreModal');
+if (modal) modal.classList.remove('active');
+}
+
+copyShareExploreLink() {
+const shareLink = document.getElementById('shareExploreLink');
+if (shareLink) {
+shareLink.select();
+document.execCommand('copy');
+this.showNotification('Link copied! 📋', 'success');
+}
+}
   // -----------------------------
   // WAIT FOR MAPS
   // -----------------------------
@@ -66,6 +97,7 @@ class AIExplorer {
       check();
     });
   }
+  
 
   // -----------------------------
   // 🔍 SEARCH (calls backend)
@@ -274,6 +306,9 @@ async focusOnPlace(place) {
     return base.toISOString().split('T')[0];
   }
 }
-
+// Share functionality
+document.getElementById('shareExploreModal')?.addEventListener('click', () => this.openShareExploreModal());
+document.getElementById('closeExploreModal')?.addEventListener('click', () => this.closeShareExploreModal());
+document.getElementById('copyExploreBtn')?.addEventListener('click', () => this.copyShareExploreLink());
 // INIT
 new AIExplorer();

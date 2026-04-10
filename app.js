@@ -205,9 +205,9 @@ document.getElementById('shareBtn')?.addEventListener('click', () => this.openSh
 document.getElementById('closeModal')?.addEventListener('click', () => this.closeShareModal());
 document.getElementById('copyBtn')?.addEventListener('click', () => this.copyShareLink());
 // Social share buttons
-document.getElementById('shareWhatsApp')?.addEventListener('click', () => this.shareOnWhatsApp());
-document.getElementById('shareTwitter')?.addEventListener('click', () => this.shareOnTwitter());
-document.getElementById('shareFacebook')?.addEventListener('click', () => this.shareOnFacebook());
+// document.getElementById('shareWhatsApp')?.addEventListener('click', () => this.shareOnWhatsApp());
+// document.getElementById('shareTwitter')?.addEventListener('click', () => this.shareOnTwitter());
+// document.getElementById('shareFacebook')?.addEventListener('click', () => this.shareOnFacebook());
 // View mode toggle
 document.getElementById('viewModeBtn')?.addEventListener('click', () => this.toggleViewMode());
 // Keyboard shortcuts
@@ -842,8 +842,9 @@ if (modal) modal.classList.add('active');
 // Generate share link
 const shareData = btoa(JSON.stringify({
 hops: this.hops,
-user: document.getElementById('userName')?.textContent || 'GeoHop User'
+//user: document.getElementById('userName')?.textContent || 'GeoHop User'
 }));
+
 const shareUrl = `${window.location.origin}${window.location.pathname}?journey=${shareData}`;
 const shareLinkEl = document.getElementById('shareLink');
 if (shareLinkEl) shareLinkEl.value = shareUrl;
