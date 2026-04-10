@@ -858,7 +858,7 @@ openExploreModal() {
 
   const payload = {
     name,
-    hops: geohop.hops
+    hops: this.hops
   };
   const encoded = btoa(JSON.stringify(payload));
 
