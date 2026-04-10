@@ -272,7 +272,7 @@ async focusOnPlace(place) {
       alert("Search first!");
       return;
     }
-
+ 
     console.log("✈️ Creating journey...");
 
     const hops = await this.convertToHops();
@@ -295,6 +295,7 @@ async focusOnPlace(place) {
     }
 
     alert("✅ Journey ready! Click Play ▶");
+     document.getElementById('shareExplorationBtn').style.display = 'block';
   }
 
   // -----------------------------
