@@ -308,7 +308,7 @@ document.getElementById('shareExplorationBtn').style.display = 'block';
   }
 }
 // Share functionality
-document.getElementById('shareExploreModal')?.addEventListener('click', () => this.openShareExploreModal());
+document.getElementById('shareExplorationBtn')?.addEventListener('click', () => this.openShareExploreModal());
 document.getElementById('closeExploreModal')?.addEventListener('click', () => this.closeShareExploreModal());
 document.getElementById('copyExploreBtn')?.addEventListener('click', () => this.copyShareExploreLink());
 // INIT
