@@ -846,7 +846,7 @@ const shareData = btoa(JSON.stringify({
 hops: this.hops
 //user: document.getElementById('userName')?.textContent || 'GeoHop User'
 }));
-console.log("hops", this.hops, "user is ", user)
+//console.log("hops", this.hops, "user is ", user)
 const shareUrl = `${window.location.origin}${window.location.pathname}?journey=${shareData}`;
 const shareLinkEl = document.getElementById('shareLink');
 console.log("sharelinkEl", shareLinkEl);
