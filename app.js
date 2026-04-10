@@ -204,6 +204,7 @@ document.getElementById('sidebar')?.classList.toggle('collapsed');
 document.getElementById('shareBtn')?.addEventListener('click', () => this.openShareModal());
 document.getElementById('closeModal')?.addEventListener('click', () => this.closeShareModal());
 document.getElementById('copyBtn')?.addEventListener('click', () => this.copyShareLink());
+document.getElementById('shareExplorationBtn')?.addEventListener('click', () => this.openEXploreModal());
 // Social share buttons
 document.getElementById('shareWhatsApp')?.addEventListener('click', () => this.shareOnWhatsApp());
 document.getElementById('shareTwitter')?.addEventListener('click', () => this.shareOnTwitter());
@@ -852,6 +853,25 @@ console.log("sharelinkEl", shareLinkEl);
 if (shareLinkEl) shareLinkEl.value = shareUrl;
 }
 
+openExploreModal() {
+ const name = document.getElementById('journeyNameInput').value || "My Journey";
+
+  const payload = {
+    name,
+    hops: geohop.hops
+  };
+  const encoded = btoa(JSON.stringify(payload));
+
+  const url = `${window.location.origin}/explore.html?journey=${encoded}`;
+
+  const modal = document.getElementById('shareModal');
+  const input = document.getElementById('shareLink');
+
+  input.value = url;
+  modal.style.display = 'block';
+}
+
+
 closeShareModal() {
 const modal = document.getElementById('shareModal');
 if (modal) modal.classList.remove('active');
@@ -1036,6 +1056,14 @@ if (journeyData) {
 try {
 const data = JSON.parse(atob(journeyData));
 this.hops = data.hops || [];
+// ✅ Set journey name
+if (data.name) {
+  const title = document.querySelector('.header h1');
+  if (title) title.textContent = `🌍 ${data.name}`;
+}
+
+// Optional: show message
+this.showNotification(`Viewing: ${data.name}`, 'info');
 const userNameEl = document.getElementById('userName');
 if (userNameEl) userNameEl.textContent = data.user || 'Shared Journey';
 const addHopSection = document.querySelector('.add-hop-section');

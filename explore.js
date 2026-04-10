@@ -240,6 +240,7 @@ async focusOnPlace(place) {
       alert("Search first!");
       return;
     }
+    document.getElementById('shareExplorationBtn').style.display = 'block';
 
     console.log("✈️ Creating journey...");
 
