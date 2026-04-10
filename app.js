@@ -1056,13 +1056,13 @@ const urlParams = new URLSearchParams(window.location.search);
 const journeyData = urlParams.get('journey');
 if (journeyData) {
 try {
-const data = JSON.parse(decodeBase64Unicode(journeyData));
+const data = JSON.parse(atob(journeyData));
 this.hops = data.hops || [];
 // ✅ Set journey name
-if (data.name) {
-  const title = document.querySelector('.header h1');
-  if (title) title.textContent = `🌍 ${data.name}`;
-}
+// if (data.name) {
+//   const title = document.querySelector('.header h1');
+//   if (title) title.textContent = `🌍 ${data.name}`;
+// }
 
 // Optional: show message
 this.showNotification(`Viewing: ${data.name}`, 'info');
