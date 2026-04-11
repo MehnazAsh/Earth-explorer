@@ -1037,6 +1037,7 @@ const journeyData = urlParams.get('journey');
 if (journeyData) {
 try {
 const data = JSON.parse(atob(journeyData));
+console.log("loading shred journey into hops", data.hops);
 this.hops = data.hops || [];
 const userNameEl = document.getElementById('userName');
 if (userNameEl) userNameEl.textContent = data.user || 'Shared Journey';

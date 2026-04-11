@@ -69,6 +69,7 @@ hops: this.hops,
 }));
 
 const shareUrl = `${window.location.origin}${window.location.pathname}?journey=${shareData}`;
+console.log("inside openShareExploreModal, shareUrl:", shareUrl);
 const shareLinkEl = document.getElementById('shareExploreLink');
 if (shareLinkEl) shareLinkEl.value = shareUrl;
 }
