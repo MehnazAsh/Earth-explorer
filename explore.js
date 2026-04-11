@@ -67,8 +67,6 @@ const shareData = btoa(encodeURIComponent(JSON.stringify({
 hops: this.geohop.hops} )));//this.hops,
 //user: document.getElementById('userName')?.textContent || 'GeoHop User'
 
-
-
 console.log("inside openShareExploreModal, shareData:", this.geohop.hops);
 
 const shareUrl = `${window.location.origin}${window.location.pathname}?journey=${shareData}`;

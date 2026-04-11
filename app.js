@@ -1037,7 +1037,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const journeyData = urlParams.get('journey');
 if (journeyData) {
 try {
-const data = JSON.parse(atob(journeyData));
+const data = JSON.parse(decodeURIComponent(atob(journeyData)));
 console.log("loading shred journey into hops", data.hops);
 this.hops = data.hops || [];
 const userNameEl = document.getElementById('userName');
