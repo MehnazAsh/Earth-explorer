@@ -664,6 +664,8 @@ console.log( "this hop", hop.country, "prev hop", prevHop.country);
 
 if (prevHop) {
   if (prevHop.country.toLowerCase() === hop.country.toLowerCase()) {
+    let dis =this.calculateDistance(prevHop, hop);
+    console.log("Distance between hops", dis);
     range = this.zoomConfig.sameCountry;
     console.log("Zooming in closer for same country");
   } else {
