@@ -34,6 +34,10 @@ await this.waitForMaps();
 await this.initMap3D();
 // Setup event listeners
 this.setupEventListeners();
+const hasSharedJourney = window.location.search.includes('journey=');
+
+  if (hasSharedJourney) {
+    this.loadHops(); }
 // Load saved data
 if (!this.skipLoad) {
   this.loadHops();
@@ -362,45 +366,45 @@ this.markers.push({ hopId: hop.id, hop: hop, element: null });
 }
 }
 
-openPhotoViewer(photos) {
-  this.currentPhotoIndex = 0;
-  this.photos = photos;
+// openPhotoViewer(photos) {
+//   this.currentPhotoIndex = 0;
+//   this.photos = photos;
 
-  const viewer = document.getElementById('photoViewer');
-  const track = document.getElementById('photoTrack');
-  track.innerHTML = photos.map(src => `<img src="${src}" />`).join('');
+//   const viewer = document.getElementById('photoViewer');
+//   const track = document.getElementById('photoTrack');
+//   track.innerHTML = photos.map(src => `<img src="${src}" />`).join('');
 
-  viewer.classList.remove('hidden');
-  this.updatePhotoPosition();
+//   viewer.classList.remove('hidden');
+//   this.updatePhotoPosition();
 
-  // Touch swipe
-  let startX = 0;
-  viewer.ontouchstart = e => startX = e.touches[0].clientX;
-  viewer.ontouchend = e => {
-    const diff = e.changedTouches[0].clientX - startX;
-    if (diff > 50) this.prevPhoto();
-    if (diff < -50) this.nextPhoto();
-  };
-}
+//   // Touch swipe
+//   let startX = 0;
+//   viewer.ontouchstart = e => startX = e.touches[0].clientX;
+//   viewer.ontouchend = e => {
+//     const diff = e.changedTouches[0].clientX - startX;
+//     if (diff > 50) this.prevPhoto();
+//     if (diff < -50) this.nextPhoto();
+//   };
+// }
 
-updatePhotoPosition() {
-  const track = document.getElementById('photoTrack');
-  track.style.transform = `translateX(-${this.currentPhotoIndex * 100}vw)`;
-}
+// updatePhotoPosition() {
+//   const track = document.getElementById('photoTrack');
+//   track.style.transform = `translateX(-${this.currentPhotoIndex * 100}vw)`;
+// }
 
-nextPhoto() {
-  if (this.currentPhotoIndex < this.photos.length - 1) {
-    this.currentPhotoIndex++;
-    this.updatePhotoPosition();
-  }
-}
+// nextPhoto() {
+//   if (this.currentPhotoIndex < this.photos.length - 1) {
+//     this.currentPhotoIndex++;
+//     this.updatePhotoPosition();
+//   }
+// }
 
-prevPhoto() {
-  if (this.currentPhotoIndex > 0) {
-    this.currentPhotoIndex--;
-    this.updatePhotoPosition();
-  }
-}
+// prevPhoto() {
+//   if (this.currentPhotoIndex > 0) {
+//     this.currentPhotoIndex--;
+//     this.updatePhotoPosition();
+//   }
+// }
 
 
 // Show city/country overlay when focusing
@@ -864,31 +868,31 @@ this.showNotification('Link copied! 📋', 'success');
 }
 }
 
-shareOnWhatsApp() {
-const shareLinkEl = document.getElementById('shareLink');
-if (shareLinkEl) {
-const url = shareLinkEl.value;
-const text = `Check out my travel journey on GeoHop! 🌍✈️`;
-window.open(`https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`);
-}
-}
+// shareOnWhatsApp() {
+// const shareLinkEl = document.getElementById('shareLink');
+// if (shareLinkEl) {
+// const url = shareLinkEl.value;
+// const text = `Check out my travel journey on GeoHop! 🌍✈️`;
+// window.open(`https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`);
+// }
+// }
 
-shareOnTwitter() {
-const shareLinkEl = document.getElementById('shareLink');
-if (shareLinkEl) {
-const url = shareLinkEl.value;
-const text = `Check out my travel journey on GeoHop! 🌍✈️`;
-window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`);
-}
-}
+// shareOnTwitter() {
+// const shareLinkEl = document.getElementById('shareLink');
+// if (shareLinkEl) {
+// const url = shareLinkEl.value;
+// const text = `Check out my travel journey on GeoHop! 🌍✈️`;
+// window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`);
+// }
+// }
 
-shareOnFacebook() {
-const shareLinkEl = document.getElementById('shareLink');
-if (shareLinkEl) {
-const url = shareLinkEl.value;
-window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`);
-}
-}
+// shareOnFacebook() {
+// const shareLinkEl = document.getElementById('shareLink');
+// if (shareLinkEl) {
+// const url = shareLinkEl.value;
+// window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`);
+// }
+// }
 
 clearForm() {
 const cityEl = document.getElementById('city');
