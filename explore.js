@@ -6,6 +6,7 @@ class AIExplorer {
     this.places = [];
     this.geohop = null;
     //this.history = new SearchHistory('searchHistory');
+    
     this.init();
     
   }
@@ -15,7 +16,7 @@ class AIExplorer {
 
     // Wait for Google Maps
     await this.waitForMaps();
-
+this.setupEventListeners();
     // Initialize your EXISTING GeoHop engine
     this.geohop = new GeoHop3D({ skipLoad: true });
     // ✅ Pre-fill search box with last query
@@ -297,7 +298,12 @@ document.getElementById('shareExplorationBtn').style.display = 'block';
     alert("✅ Journey ready! Click Play ▶");
      
   }
-
+setupEventListeners() {
+  // Share functionality
+document.getElementById('shareExplorationBtn')?.addEventListener('click', () => this.openShareExploreModal());
+document.getElementById('closeExploreModal')?.addEventListener('click', () => this.closeShareExploreModal());
+document.getElementById('copyExploreBtn')?.addEventListener('click', () => this.copyShareExploreLink());
+}
   // -----------------------------
   // 📅 AUTO DATE GENERATION
   // -----------------------------
@@ -307,9 +313,7 @@ document.getElementById('shareExplorationBtn').style.display = 'block';
     return base.toISOString().split('T')[0];
   }
 }
-// Share functionality
-document.getElementById('shareExplorationBtn')?.addEventListener('click', () => this.openShareExploreModal());
-document.getElementById('closeExploreModal')?.addEventListener('click', () => this.closeShareExploreModal());
-document.getElementById('copyExploreBtn')?.addEventListener('click', () => this.copyShareExploreLink());
+
+
 // INIT
 new AIExplorer();
