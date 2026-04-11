@@ -63,16 +63,16 @@ openShareExploreModal() {
 const modal = document.getElementById('shareExploreModal');
 if (modal) modal.classList.add('active');
 // Generate share link
-//const shareData = btoa(JSON.stringify({
-//hops: this.geohop.hops //this.hops,
+const shareData = btoa(encodeURIComponent(JSON.stringify({
+hops: this.geohop.hops} )));//this.hops,
 //user: document.getElementById('userName')?.textContent || 'GeoHop User'
 
-//}));
+
 
 console.log("inside openShareExploreModal, shareData:", this.geohop.hops);
 
 const shareUrl = `${window.location.origin}${window.location.pathname}?journey=${shareData}`;
-console.log("inside openShareExploreModal, shareUrl:", shareUrl, "hops", this.hops);
+
 const shareLinkEl = document.getElementById('shareExploreLink');
 if (shareLinkEl) shareLinkEl.value = shareUrl;
 }
