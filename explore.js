@@ -64,7 +64,7 @@ const modal = document.getElementById('shareExploreModal');
 if (modal) modal.classList.add('active');
 // Generate share link
 const shareData = btoa(JSON.stringify({
-hops: this.hops,
+hops: this.geohop.hops //this.hops,
 //user: document.getElementById('userName')?.textContent || 'GeoHop User'
 }));
 
