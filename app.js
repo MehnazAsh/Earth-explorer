@@ -5,7 +5,7 @@ this.skipLoad = options.skipLoad || false;
 this.zoomConfig = {
     default: 9000000,
     sameCountry: 3000000,
-    closeCity: 1000000,
+    closeCity: 2000000,
     differentCountry: 8000000,
     ...options.zoomConfig
   };
@@ -1111,7 +1111,7 @@ if (document.getElementById('addHopForm')) {
   zoomConfig: {
     default: 9000000,
     sameCountry: 3000000,
-     closeCity: 1000000,
+     closeCity: 2000000,
     differentCountry: 8000000
   }
 });
