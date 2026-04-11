@@ -853,10 +853,12 @@ if (modal) modal.classList.add('active');
 const shareData = btoa(JSON.stringify({
 hops: this.hops,
 //user: document.getElementById('userName')?.textContent || 'GeoHop User'
+journeyName: document.getElementById('journeyName') || 'My Journey'
 }));
 
 const shareUrl = `${window.location.origin}${window.location.pathname}?journey=${shareData}`;
 const shareLinkEl = document.getElementById('shareLink');
+const journeyNameEl = document.getElementById('journeyName');
 if (shareLinkEl) shareLinkEl.value = shareUrl;
 console.log("Inside openShareModal",shareUrl);
 }
@@ -1046,6 +1048,11 @@ try {
 const data = JSON.parse(decodeURIComponent(atob(journeyData)));
 console.log("loading shred journey into hops", data.hops);
 this.hops = data.hops || [];
+const headerTitle = document.querySelector('.header h1');
+
+if (headerTitle) {
+  headerTitle.textContent = data.journeyName || 'Shared Journey 🌍';
+}
 const userNameEl = document.getElementById('userName');
 if (userNameEl) userNameEl.textContent = data.user || 'Shared Journey';
 const addHopSection = document.querySelector('.add-hop-section');
