@@ -83,7 +83,7 @@ const shareLink = document.getElementById('shareExploreLink');
 if (shareLink) {
 shareLink.select();
 document.execCommand('copy');
-this.showNotification('Link copied! 📋', 'success');
+//this.showNotification('Link copied! 📋', 'success');
 }
 }
   // -----------------------------
