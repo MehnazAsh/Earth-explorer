@@ -75,7 +75,7 @@ if (shareLinkEl) shareLinkEl.value = shareUrl;
 }
 
 closeShareExploreModal() {
-const modal = document.getElementById('shareExploreModal');
+const modal = document.getElementById('closeModal');
 if (modal) modal.classList.remove('active');
 }
 

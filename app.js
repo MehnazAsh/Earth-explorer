@@ -852,6 +852,7 @@ hops: this.hops,
 const shareUrl = `${window.location.origin}${window.location.pathname}?journey=${shareData}`;
 const shareLinkEl = document.getElementById('shareLink');
 if (shareLinkEl) shareLinkEl.value = shareUrl;
+console.log("Inside openShareModal",shareUrl);
 }
 
 closeShareModal() {
