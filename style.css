@@ -679,7 +679,7 @@ gmp-marker-3d {
 #results {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 /* Card */
@@ -687,9 +687,9 @@ gmp-marker-3d {
   display: flex;
   align-items: center;
   background: white;
-  border-radius: 10px;
-  padding: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  border-radius: 8cm;
+  padding: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   transition: all 0.2s ease;
   cursor: pointer;
   font-size: 14px;
