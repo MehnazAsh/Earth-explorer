@@ -69,13 +69,13 @@ hops: this.hops,
 }));
 
 const shareUrl = `${window.location.origin}${window.location.pathname}?journey=${shareData}`;
-console.log("inside openShareExploreModal, shareUrl:", shareUrl);
+console.log("inside openShareExploreModal, shareUrl:", shareUrl, "hops", this.hops);
 const shareLinkEl = document.getElementById('shareExploreLink');
 if (shareLinkEl) shareLinkEl.value = shareUrl;
 }
 
 closeShareExploreModal() {
-const modal = document.getElementById('closeModal');
+const modal = document.getElementById('shareExploreModal');
 if (modal) modal.classList.remove('active');
 }
 
