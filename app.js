@@ -4,7 +4,8 @@ constructor(options = {}) {
 this.skipLoad = options.skipLoad || false;
 this.zoomConfig = {
     default: 9000000,
-    sameCountry: 4000000,
+    sameCountry: 3000000,
+    closeCity: 1000000,
     differentCountry: 8000000,
     ...options.zoomConfig
   };
@@ -665,12 +666,14 @@ console.log( "this hop", hop.country, "prev hop", prevHop.country);
 if (prevHop) {
   if (prevHop.country.toLowerCase() === hop.country.toLowerCase()) {
     let dis =this.calculateDistance(prevHop, hop);
-    console.log("Distance between hops", dis);
+    if(dis<2700)
+      range=this.zoomConfig.closeCity;
+    else
     range = this.zoomConfig.sameCountry;
-    console.log("Zooming in closer for same country");
+    
   } else {
     range = this.zoomConfig.differentCountry;
-    console.log("Zooming out for different country");
+    
   }
 }
 }
@@ -839,7 +842,7 @@ const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
 Math.cos(hop1.lat * Math.PI / 180) * Math.cos(hop2.lat * Math.PI / 180) *
 Math.sin(dLng/2) * Math.sin(dLng/2);
 const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-console.log("inaside calculate distance", R*c);
+
 return R * c;
 }
 
@@ -1108,6 +1111,7 @@ if (document.getElementById('addHopForm')) {
   zoomConfig: {
     default: 9000000,
     sameCountry: 3000000,
+     closeCity: 1000000,
     differentCountry: 8000000
   }
 });
