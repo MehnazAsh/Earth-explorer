@@ -1,5 +1,5 @@
 //import SearchHistory from './js/searchHistory.js';
-//console.log("SearchHistory import:", SearchHistory);
+////console.log("SearchHistory import:", SearchHistory);
 
 class AIExplorer {
   constructor() {
@@ -12,7 +12,7 @@ class AIExplorer {
   }
 
   async init() {
-    console.log("🚀 AI Explorer Init");
+    //console.log("🚀 AI Explorer Init");
 
     // Wait for Google Maps
     await this.waitForMaps();
@@ -30,7 +30,7 @@ this.setupEventListeners();
   if (saved) {
     this.places = JSON.parse(saved);
 
-    console.log("🔄 Restored previous search:", this.places);
+    //console.log("🔄 Restored previous search:", this.places);
 
     this.renderResults(this.places);
     
@@ -87,7 +87,7 @@ const modal = document.getElementById('shareExploreModal');
       hops: this.geohop.hops,
       journeyName: defaultName
     };
-console.log("inside openShareExploreModal, shareData:", shareData.hops, "with name:", shareData.journeyName);
+//console.log("inside openShareExploreModal, shareData:", shareData.hops, "with name:", shareData.journeyName);
     const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(shareData))));
 
     const shareUrl = `${window.location.origin}${window.location.pathname}?journey=${encoded}`;
@@ -121,7 +121,7 @@ if (journeyName) {
       hops: this.geohop.hops,
       journeyName: finalName
     };
-    console.log("Copying share data:", shareData.hops, "with name:", finalName);
+    //console.log("Copying share data:", shareData.hops, "with name:", finalName);
     const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(shareData))));
     const finalUrl = `${window.location.origin}${window.location.pathname}?journey=${encoded}`;
 
@@ -166,7 +166,7 @@ if (journeyName) {
       return;
     }
 
-    console.log("🔍 Searching:", query);
+    ////console.log("🔍 Searching:", query);
 
     try {
       this.clearPreviousJourney();
@@ -179,7 +179,7 @@ if (journeyName) {
 
       const data = await res.json();
 
-      console.log("✅ AI Results:", data);
+      //console.log("✅ AI Results:", data);
 
       this.places = data;
   //this.history.save(query, data);
@@ -196,7 +196,7 @@ if (journeyName) {
     }
   }
 restoreSearch(selected) {
-  console.log("🔄 Restoring:", selected.query);
+  //console.log("🔄 Restoring:", selected.query);
 
   this.places = selected.results;
 
@@ -204,7 +204,7 @@ restoreSearch(selected) {
   
 }
   clearPreviousJourney() {
-  console.log("🧹 Clearing previous journey");
+  //console.log("🧹 Clearing previous journey");
 
   this.places = [];
 
@@ -329,7 +329,7 @@ async focusOnPlace(place) {
       return;
     }
  
-    console.log("✈️ Creating journey...");
+    //console.log("✈️ Creating journey...");
 
     const hops = await this.convertToHops();
 

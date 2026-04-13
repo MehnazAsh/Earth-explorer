@@ -17,7 +17,7 @@ export default async function handler(req, res) {
 
     const { query } = body || {};
 
-    console.log("📥 Query:", query);
+    //console.log("📥 Query:", query);
 
     if (!query) {
       return res.status(400).json({ error: "Query is required" });
@@ -36,7 +36,7 @@ export default async function handler(req, res) {
 
     let finalPlaces = places1 || [];
 
-    console.log("🧠 First response count:", finalPlaces.length);
+    //console.log("🧠 First response count:", finalPlaces.length);
 
     // -------------------------------
     // 🔁 RETRY if less than 10
@@ -77,6 +77,7 @@ export default async function handler(req, res) {
     // -------------------------------
     if (finalPlaces.length === 0) {
       console.warn("⚠️ Using fallback data");
+      alert("⚠️ Uh Oh ! Gemini is experiencing high demand .We're  Using fallback data till in the interim.Please try bac in some time .");
       finalPlaces = getFallback();
     }
 
@@ -133,7 +134,7 @@ Format:
 
     const data = await response.json();
 
-    console.log("🧠 Gemini raw:", data);
+    //console.log("🧠 Gemini raw:", data);
 
     let rawText = "";
 

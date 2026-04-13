@@ -28,7 +28,7 @@ class GeoHop3D {
 
   async init() {
     try {
-      console.log('Starting GeoHop initialization...');
+      //console.log('Starting GeoHop initialization...');
       // Wait for Google Maps to load
       await this.waitForMaps();
       // Initialize 3D map
@@ -38,7 +38,7 @@ class GeoHop3D {
       const hasSharedJourney = window.location.search.includes('journey=');
 
       if (hasSharedJourney) {
-        console.log("I am inside hassharedjourney");
+        //console.log("I am inside hassharedjourney");
         const shareBtn = document.getElementById('shareBtn');
         if (shareBtn) {
           shareBtn.style.display = 'none';
@@ -48,12 +48,12 @@ class GeoHop3D {
       }
       // Load saved data
       if (!this.skipLoad && !hasSharedJourney) {
-        console.log("I am inside not skipload");
+        //console.log("I am inside not skipload");
         this.loadHops();
       }
       // Set date constraints
       this.setDateConstraints();
-      console.log('GeoHop initialization complete!');
+      //console.log('GeoHop initialization complete!');
     } catch (error) {
       console.error('Initialization error:', error);
       this.showNotification('Failed to initialize. Please check console for details.', 'error');
@@ -67,7 +67,7 @@ class GeoHop3D {
       const checkMaps = () => {
         attempts++;
         if (window.google && window.google.maps) {
-          console.log('Google Maps loaded successfully');
+          //console.log('Google Maps loaded successfully');
           resolve();
         } else if (attempts >= maxAttempts) {
           reject(new Error('Google Maps failed to load'));
@@ -81,10 +81,10 @@ class GeoHop3D {
 
   async initMap3D() {
     try {
-      console.log('Loading maps3d library...');
+      //console.log('Loading maps3d library...');
       // Import the maps3d library
       this.maps3dLibrary = await google.maps.importLibrary("maps3d");
-      console.log('maps3d library loaded:', this.maps3dLibrary);
+      //console.log('maps3d library loaded:', this.maps3dLibrary);
       // Get the map element
       this.map3d = document.getElementById('map3d');
       if (!this.map3d) {
@@ -101,7 +101,7 @@ class GeoHop3D {
       }
       // Add custom CSS for labels
       this.addLabelStyles();
-      console.log('Map initialization complete');
+      //console.log('Map initialization complete');
     } catch (error) {
       console.error('Error initializing 3D map:', error);
       // Try alternative initialization
@@ -110,12 +110,12 @@ class GeoHop3D {
   }
 
   async alternativeInit() {
-    console.log('Trying alternative initialization...');
+    //console.log('Trying alternative initialization...');
     try {
       // Check if maps3d is available directly
       if (google.maps.maps3d) {
         this.maps3dLibrary = google.maps.maps3d;
-        console.log('Found maps3d directly');
+        //console.log('Found maps3d directly');
       } else {
         // Try to load it differently
         const libraries = await google.maps.importLibrary("maps3d");
@@ -125,7 +125,7 @@ class GeoHop3D {
       this.map3d = document.getElementById('map3d');
       // Wait for the element to be ready
       await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('Alternative initialization successful');
+      //console.log('Alternative initialization successful');
     } catch (error) {
       console.error('Alternative initialization failed:', error);
       this.showNotification('3D Maps not available. Some features may be limited.', 'warning');
@@ -316,7 +316,7 @@ to { transform: translateX(-50%) translateY(0); opacity: 1; }
         description,
         photos
       };
-      console.log(hop);
+      //console.log(hop);
       this.hops.unshift(hop);
       this.saveHops();
       this.displayHops();
@@ -337,7 +337,7 @@ to { transform: translateX(-50%) translateY(0); opacity: 1; }
 
   async addMarker3D(hop) {
     try {
-      console.log("Adding 3D marker for hop:");
+      //console.log("Adding 3D marker for hop:");
       // Check if we have the 3D library
       if (this.maps3dLibrary && this.maps3dLibrary.Marker3DElement) {
         // Use the new 3D marker
@@ -359,7 +359,7 @@ to { transform: translateX(-50%) translateY(0); opacity: 1; }
         return marker;
       } else {
         // Fallback: Create a custom marker element
-        console.log('Using fallback marker creation');
+        //console.log('Using fallback marker creation');
         const marker = document.createElement('gmp-marker-3d');
         marker.position = { lat: hop.lat, lng: hop.lng, altitude: hop.altitude };
         marker.altitudeMode = 'RELATIVE_TO_GROUND';
@@ -424,7 +424,7 @@ to { transform: translateX(-50%) translateY(0); opacity: 1; }
   // Show city/country overlay when focusing
   showHopOverlay(hop) {
     // Remove any existing overlay
-    console.log("I am inside showhopoverlay", hop, hop.city);
+    //console.log("I am inside showhopoverlay", hop, hop.city);
     const existingOverlay = document.querySelector('.hop-info-overlay');
     if (existingOverlay) {
       existingOverlay.remove();
@@ -552,7 +552,7 @@ ${hop.description ? `<div style="font-size: 14px; margin-top: 10px; font-style: 
   }
 
   displayHops() {
-    console.log('Displaying hops in sidebar:');
+    //console.log('Displaying hops in sidebar:');
     const hopsList = document.getElementById('hopsList');
     if (!hopsList) return;
     hopsList.innerHTML = '';
@@ -620,7 +620,7 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
     // }
     this.showHopOverlay(hop);
     try {
-      console.log("I am in focusOnhop with range", customRange);
+      //console.log("I am in focusOnhop with range", customRange);
       // Animate camera to hop location
       this.map3d.flyCameraTo({
         endCamera: {
@@ -679,7 +679,7 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
       let range = this.zoomConfig.default;
       if (this.currentHopIndex > 0) {
         const prevHop = sortedHops[this.currentHopIndex - 1];
-        console.log("this hop", hop.country, "prev hop", prevHop.country);
+        //console.log("this hop", hop.country, "prev hop", prevHop.country);
 
 
         if (prevHop) {
@@ -870,7 +870,7 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
       hops: this.hops,
       journeyName: journeyName || null
     };
-    console.log("in generate link with journey name", shareData.journeyName);
+    //console.log("in generate link with journey name", shareData.journeyName);
     const encoded = btoa(
       unescape(encodeURIComponent(JSON.stringify(shareData)))
     );
@@ -878,7 +878,7 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
     const shareLinkEl = document.getElementById('shareLink');
 
     if (shareLinkEl) shareLinkEl.value = shareUrl;
-    console.log("In generateSharelink:", shareUrl);
+    //console.log("In generateSharelink:", shareUrl);
 
     return shareUrl;
   }
@@ -1036,9 +1036,9 @@ white-space: pre-line;
   saveHops() {
     try {
       localStorage.setItem('geoHops3D', JSON.stringify(this.hops));
-      console.log("I am svaing hops", this.hops)
+      //console.log("I am svaing hops", this.hops)
     } catch (error) {
-      console.error('Error saving hops:', error);
+      //console.error('Error saving hops:', error);
     }
   }
   clearExistingJourney() {
@@ -1108,12 +1108,12 @@ white-space: pre-line;
         const data = JSON.parse(decodeURIComponent(atob(journeyData)));
 
         this.hops = data.hops || [];
-        console.log("Loaded shared journey with hops:", this.hops);
+       // console.log("Loaded shared journey with hops:", this.hops);
         if (data.journeyName) {
 
           const journeyTitleEl = document.getElementById('journeyTitle');
           const createJourney = document.getElementById('userName');
-          console.log("Loaded shared journey with name:", data.journeyName);
+          //console.log("Loaded shared journey with name:", data.journeyName);
           if (journeyTitleEl) {
             journeyTitleEl.textContent = data.journeyName || 'Shared Journey';
             const userNameEl = document.getElementById('userName');
@@ -1183,7 +1183,7 @@ document.head.appendChild(style);
 // Initialize app
 let geohop;
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('DOM loaded, initializing GeoHop...');
+  //console.log('DOM loaded, initializing GeoHop...');
   if (document.getElementById('addHopForm')) {
     geohop = new GeoHop3D({
       zoomConfig: {
