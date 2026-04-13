@@ -135,15 +135,12 @@ Each result must include:
 - place: specific name (e.g. "Strait of Hormuz", "Eiffel Tower")
 - city: nearest major city (or empty if not applicable)
 - country: country name
-- description: short 1-line description
-
 Format:
 [
   {
     "place": "Place Name",
     "city": "City",
-    "country": "Country",
-    "description": "Short description"
+    "country": "Country"
   }
 ]
 `

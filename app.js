@@ -430,14 +430,29 @@ to { transform: translateX(-50%) translateY(0); opacity: 1; }
       existingOverlay.remove();
     }
     const overlay = document.createElement('div');
+    const title = hop.place && hop.place.trim()
+  ? `${hop.place}, ${hop.city}`
+  : `${hop.city}, ${hop.country}`;
     overlay.className = 'hop-info-overlay';
     overlay.innerHTML = `
 <div style="text-align: center;">
-<div style="font-size: 32px; margin-bottom: 10px;">📍</div>
-<div style="font-size: 28px; font-weight: bold; margin-bottom: 5px;">${hop.city}</div>
-<div style="font-size: 20px; opacity: 0.8; margin-bottom: 10px;">${hop.country}</div>
+  <div style="font-size: 32px; margin-bottom: 10px;">📍</div>
 
-${hop.description ? `<div style="font-size: 14px; margin-top: 10px; font-style: italic;">"${hop.description}"</div>` : ''}
+  <div style="font-size: 28px; font-weight: bold; margin-bottom: 5px;">
+    ${title}
+  </div>
+
+  ${
+    hop.place && hop.place.trim()
+      ? `<div style="font-size: 20px; opacity: 0.8; margin-bottom: 10px;">${hop.country}</div>`
+      : ''
+  }
+
+  ${
+    hop.description
+      ? `<div style="font-size: 14px; margin-top: 10px; font-style: italic;">"${hop.description}"</div>`
+      : ''
+  }
 </div>
 `;
     document.body.appendChild(overlay);
