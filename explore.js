@@ -128,7 +128,7 @@ const shareLinkEl = document.getElementById('shareExploreLink');
     shareLinkEl.select();
     document.execCommand('copy');
 
-    this.showNotification(
+    this.geohop.showNotification(
       journeyName
         ? `Link copied with name: "${journeyName}" 📋`
         : `Link copied (default name used) 📋`,
