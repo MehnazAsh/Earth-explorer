@@ -58,7 +58,7 @@ export default async function handler(req, res) {
     const seen = new Set();
 
     for (let p of finalPlaces) {
-      const key = `${p.place}-${p.country}`;
+      const key = `${p.place}-${p.city}-${p.country}`;
       if (!seen.has(key)) {
         seen.add(key);
         unique.push(p);
@@ -71,13 +71,20 @@ export default async function handler(req, res) {
     // ✂️ LIMIT TO 10
     // -------------------------------
     finalPlaces = finalPlaces.slice(0, 10);
+    // ✅ ADD HERE
+finalPlaces = finalPlaces.map(p => ({
+  place: p.place || "",
+  city: p.city || "",
+  country: p.country || "",
+  description: p.description || ""
+}));
 
     // -------------------------------
     // 🛟 FALLBACK if still empty
     // -------------------------------
     if (finalPlaces.length === 0) {
       console.warn("⚠️ Using fallback data");
-      alert("⚠️ Uh Oh ! Gemini is experiencing high demand .We're  Using fallback data till in the interim.Please try bac in some time .");
+      //alert("⚠️ Uh Oh ! Gemini is experiencing high demand .We're  Using fallback data till in the interim.Please try bac in some time .");
       finalPlaces = getFallback();
     }
 
@@ -112,16 +119,24 @@ async function callGemini(API_KEY, query) {
               parts: [
                 {
                   text: `
-Return EXACTLY 10 travel destinations for: "${query}"
 
-Rules:
+IMPORTANT RULES:
 - Must return 10 items
 - Real places only
-- No explanation
+- DO NOT return just cities
+- Each item MUST be a specific place (landmark, attraction, beach, etc.)
+- Include place, city, country
+- Add a short 1-line description (max 12 words)
+- No explanation outside JSON
 
-Format:
+STRICT JSON FORMAT:
 [
-  { "place": "City", "country": "Country" }
+  {
+    "place": "Eiffel Tower",
+    "city": "Paris",
+    "country": "France",
+    "description": "Iconic iron tower with stunning city views"
+  }
 ]
 `
                 }
@@ -179,14 +194,19 @@ function extractJSON(text) {
 
       if (m1) {
         places.push({
-          place: m1[1].trim(),
-          country: m1[2].trim()
-        });
-      } else if (m2) {
-        places.push({
-          place: m2[1].trim(),
-          country: m2[2].trim()
-        });
+  place: m1[1].trim(),
+  city: "",
+  country: m1[2].trim(),
+  description: ""
+});
+      } 
+      else if (m2) {
+       places.push({
+  place: m1[1].trim(),
+  city: "",
+  country: m1[2].trim(),
+  description: ""
+});
       }
     }
 
@@ -202,10 +222,26 @@ function extractJSON(text) {
 // 🌍 Fallback Data
 // -------------------------------
 function getFallback() {
+  function getFallback() {
   return [
-    { place: "Bali", country: "Indonesia" },
-    { place: "Santorini", country: "Greece" },
-    { place: "Maldives", country: "Maldives" }
-   
+    {
+      place: "Bali Beaches",
+      city: "Bali",
+      country: "Indonesia",
+      description: "Tropical beaches with vibrant culture and sunsets"
+    },
+    {
+      place: "Santorini Cliffs",
+      city: "Santorini",
+      country: "Greece",
+      description: "Whitewashed villages overlooking stunning blue sea"
+    },
+    {
+      place: "Maldives Resorts",
+      city: "Male",
+      country: "Maldives",
+      description: "Luxury overwater villas in crystal clear waters"
+    }
   ];
+}
 }
