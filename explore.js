@@ -305,6 +305,7 @@ setupEventListeners() {
 document.getElementById('shareExplorationBtn')?.addEventListener('click', () => this.openShareExploreModal());
 document.getElementById('closeExploreModal')?.addEventListener('click', () => this.closeShareExploreModal());
 document.getElementById('copyExploreBtn')?.addEventListener('click', () => this.copyShareExploreLink());
+
 }
   // -----------------------------
   // 📅 AUTO DATE GENERATION

@@ -675,6 +675,12 @@ gmp-marker-3d {
     }
 }
 
+.journey-title {
+  font-size: 2em;
+  margin: 0;
+  margin-left: 150px; /* 👈 shift right */
+}
+
 /* RESULTS STYLING */
 #results {
   display: flex;
