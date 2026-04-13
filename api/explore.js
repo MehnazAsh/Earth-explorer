@@ -120,21 +120,30 @@ async function callGemini(API_KEY, query) {
                 {
                   text: `
 
-IMPORTANT RULES:
-- Must return 10 items
-- Real places only
-- DO NOT return just cities
-- Each item MUST be a specific place (landmark, attraction, beach, etc.)
-- Include place, city, country
-- No explanation outside JSON
+Return EXACTLY 10 results for: "${query}"
 
-STRICT JSON FORMAT:
+Rules:
+- Results MUST match the query type strictly
+- If query is about geography (e.g. straits, rivers, mountains), return those ONLY
+- If query is about places/attractions, return landmarks
+- DO NOT return generic tourist places unless relevant to the query
+- No duplicates
+- Real-world entities only
+- No explanation
+
+Each result must include:
+- place: specific name (e.g. "Strait of Hormuz", "Eiffel Tower")
+- city: nearest major city (or empty if not applicable)
+- country: country name
+- description: short 1-line description
+
+Format:
 [
   {
-    "place": "Eiffel Tower",
-    "city": "Paris",
-    "country": "France"
-    
+    "place": "Place Name",
+    "city": "City",
+    "country": "Country",
+    "description": "Short description"
   }
 ]
 `
