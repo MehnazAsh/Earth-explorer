@@ -60,19 +60,39 @@ this.setupEventListeners();
 
 
 openShareExploreModal() {
+// const modal = document.getElementById('shareExploreModal');
+// if (modal) modal.classList.add('active');
+// // Generate share link
+// const shareData = btoa(encodeURIComponent(JSON.stringify({
+// hops: this.geohop.hops} )));//this.hops,
+// //user: document.getElementById('userName')?.textContent || 'GeoHop User'
+
+// console.log("inside openShareExploreModal, shareData:", this.geohop.hops);
+
+// const shareUrl = `${window.location.origin}${window.location.pathname}?journey=${shareData}`;
+
+// const shareLinkEl = document.getElementById('shareExploreLink');
+// if (shareLinkEl) shareLinkEl.value = shareUrl;
+
+///
 const modal = document.getElementById('shareExploreModal');
-if (modal) modal.classList.add('active');
-// Generate share link
-const shareData = btoa(encodeURIComponent(JSON.stringify({
-hops: this.geohop.hops} )));//this.hops,
-//user: document.getElementById('userName')?.textContent || 'GeoHop User'
+    modal?.classList.add('active');
 
-console.log("inside openShareExploreModal, shareData:", this.geohop.hops);
+    const journeyNameInput = document.getElementById('journeyExploreName');
+    if (journeyNameInput) journeyNameInput.value = '';
 
-const shareUrl = `${window.location.origin}${window.location.pathname}?journey=${shareData}`;
+    const defaultName = 'Shared Journey';
 
-const shareLinkEl = document.getElementById('shareExploreLink');
-if (shareLinkEl) shareLinkEl.value = shareUrl;
+    const shareData = {
+      hops: this.hops,
+      journeyName: defaultName
+    };
+
+    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(shareData))));
+
+    const shareUrl = `${window.location.origin}${window.location.pathname}?journey=${encoded}`;
+
+    document.getElementById('shareLink').value = shareUrl;
 }
 
 closeShareExploreModal() {
@@ -81,12 +101,39 @@ if (modal) modal.classList.remove('active');
 }
 
 copyShareExploreLink() {
-const shareLink = document.getElementById('shareExploreLink');
-if (shareLink) {
-shareLink.select();
-document.execCommand('copy');
-//this.showNotification('Link copied! 📋', 'success');
-}
+// const shareLink = document.getElementById('shareExploreLink');
+// if (shareLink) {
+// shareLink.select();
+// document.execCommand('copy');
+// //this.showNotification('Link copied! 📋', 'success');
+// }
+
+/////
+const shareLinkEl = document.getElementById('shareLink');
+    const journeyName = document.getElementById('journeyExploreName')?.value.trim();
+
+    const finalName = journeyName || 'My Journey';
+
+    const shareData = {
+      hops: this.hops,
+      journeyName: finalName
+    };
+
+    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(shareData))));
+    const finalUrl = `${window.location.origin}${window.location.pathname}?journey=${encoded}`;
+
+    // ✅ Update link before copying
+    shareLinkEl.value = finalUrl;
+
+    shareLinkEl.select();
+    document.execCommand('copy');
+
+    this.showNotification(
+      journeyName
+        ? `Link copied with name: "${journeyName}" 📋`
+        : `Link copied (default name used) 📋`,
+      'success'
+    );
 }
   // -----------------------------
   // WAIT FOR MAPS
