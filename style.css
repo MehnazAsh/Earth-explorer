@@ -73,10 +73,11 @@ html, body {
 .white-link {
   color: white;
   text-decoration: none;
+  text-decoration: underline;
 }
 
 .white-link:hover {
-  text-decoration: underline;
+  
   opacity: 0.85;
 }
 
