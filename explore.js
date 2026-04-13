@@ -126,10 +126,10 @@ if (journeyName) {
     const finalUrl = `${window.location.origin}${window.location.pathname}?journey=${encoded}`;
 
     // ✅ Update link before copying
-    if (shareLink)
+    if (shareLinkEl)
     shareLinkEl.value = finalUrl;
   }
-  if (shareLink){
+  if (shareLinkEl){
     shareLinkEl.select();
     document.execCommand('copy');
 
