@@ -1118,7 +1118,7 @@ white-space: pre-line;
             journeyTitleEl.textContent = data.journeyName || 'Shared Journey';
             const userNameEl = document.getElementById('userName');
             userNameEl.innerHTML = `
-  Shared Journey 🌍 • 
+  
   <a href="index.html" target="_blank" style="margin-left:10px; text-decoration: underline;">
     Showcase my journey ✈️
   </a>
