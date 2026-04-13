@@ -229,9 +229,7 @@ class AIExplorer {
       <div class="result-content">
         <div class="result-place">${p.place}</div>
         <div class="result-location">${p.city ? p.city + ', ' : ''}${p.country}</div>
-        <div class="result-description">
-    ✨ ${p.description}
-  </div>
+    
       </div>
     </div>
   `).join('');
@@ -276,10 +274,7 @@ class AIExplorer {
             lat: loc.lat(),
             lng: loc.lng(),
             altitude: 100,
-            order: i,
-
-            // ✅ use Gemini description if available
-            description: p.description || "AI discovered destination ✨"
+            order: i
           });
         }
 

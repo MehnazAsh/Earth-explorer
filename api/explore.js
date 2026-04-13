@@ -75,8 +75,8 @@ export default async function handler(req, res) {
 finalPlaces = finalPlaces.map(p => ({
   place: p.place || "",
   city: p.city || "",
-  country: p.country || "",
-  description: p.description || ""
+  country: p.country || ""
+  //description: p.description || ""
 }));
 
     // -------------------------------
@@ -126,7 +126,6 @@ IMPORTANT RULES:
 - DO NOT return just cities
 - Each item MUST be a specific place (landmark, attraction, beach, etc.)
 - Include place, city, country
-- Add a short 1-line description (max 12 words)
 - No explanation outside JSON
 
 STRICT JSON FORMAT:
@@ -134,8 +133,8 @@ STRICT JSON FORMAT:
   {
     "place": "Eiffel Tower",
     "city": "Paris",
-    "country": "France",
-    "description": "Iconic iron tower with stunning city views"
+    "country": "France"
+    
   }
 ]
 `
@@ -196,16 +195,15 @@ function extractJSON(text) {
         places.push({
   place: m1[1].trim(),
   city: "",
-  country: m1[2].trim(),
-  description: ""
+  country: m1[2].trim()
+  
 });
       } 
       else if (m2) {
        places.push({
   place: m1[1].trim(),
   city: "",
-  country: m1[2].trim(),
-  description: ""
+  country: m1[2].trim()
 });
       }
     }
@@ -228,19 +226,19 @@ function getFallback() {
       place: "Bali Beaches",
       city: "Bali",
       country: "Indonesia",
-      description: "Tropical beaches with vibrant culture and sunsets"
+      //description: "Tropical beaches with vibrant culture and sunsets"
     },
     {
       place: "Santorini Cliffs",
       city: "Santorini",
       country: "Greece",
-      description: "Whitewashed villages overlooking stunning blue sea"
+      //description: "Whitewashed villages overlooking stunning blue sea"
     },
     {
       place: "Maldives Resorts",
       city: "Male",
       country: "Maldives",
-      description: "Luxury overwater villas in crystal clear waters"
+      //description: "Luxury overwater villas in crystal clear waters"
     }
   ];
 }
