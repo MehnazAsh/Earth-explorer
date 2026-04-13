@@ -6,9 +6,9 @@ class AIExplorer {
     this.places = [];
     this.geohop = null;
     //this.history = new SearchHistory('searchHistory');
-    
+
     this.init();
-    
+
   }
 
   async init() {
@@ -16,25 +16,25 @@ class AIExplorer {
 
     // Wait for Google Maps
     await this.waitForMaps();
-this.setupEventListeners();
+    this.setupEventListeners();
     // Initialize your EXISTING GeoHop engine
     this.geohop = new GeoHop3D({ skipLoad: true });
     // ✅ Pre-fill search box with last query
-  const history = JSON.parse(localStorage.getItem('aiSearchHistory') || "[]");
-  const lastQuery = history[0]?.query || "";
+    const history = JSON.parse(localStorage.getItem('aiSearchHistory') || "[]");
+    const lastQuery = history[0]?.query || "";
 
-  const input = document.getElementById('queryInput');
-  if (input) input.value = lastQuery;
- const saved = localStorage.getItem('aiExplorePlaces');
+    const input = document.getElementById('queryInput');
+    if (input) input.value = lastQuery;
+    const saved = localStorage.getItem('aiExplorePlaces');
 
-  if (saved) {
-    this.places = JSON.parse(saved);
+    if (saved) {
+      this.places = JSON.parse(saved);
 
-    //console.log("🔄 Restored previous search:", this.places);
+      //console.log("🔄 Restored previous search:", this.places);
 
-    this.renderResults(this.places);
-    
-  }
+      this.renderResults(this.places);
+
+    }
     // Hook buttons
     document.getElementById('searchBtn')
       ?.addEventListener('click', () => this.search());
@@ -51,31 +51,31 @@ this.setupEventListeners();
     document.getElementById('resetBtn')
       ?.addEventListener('click', () => this.geohop.resetJourney());
     //this.history.render((selected) => {
-  //this.restoreSearch(selected);
-//});
+    //this.restoreSearch(selected);
+    //});
   }
 
-  
 
 
 
-openShareExploreModal() {
-// const modal = document.getElementById('shareExploreModal');
-// if (modal) modal.classList.add('active');
-// // Generate share link
-// const shareData = btoa(encodeURIComponent(JSON.stringify({
-// hops: this.geohop.hops} )));//this.hops,
-// //user: document.getElementById('userName')?.textContent || 'GeoHop User'
 
-// console.log("inside openShareExploreModal, shareData:", this.geohop.hops);
+  openShareExploreModal() {
+    // const modal = document.getElementById('shareExploreModal');
+    // if (modal) modal.classList.add('active');
+    // // Generate share link
+    // const shareData = btoa(encodeURIComponent(JSON.stringify({
+    // hops: this.geohop.hops} )));//this.hops,
+    // //user: document.getElementById('userName')?.textContent || 'GeoHop User'
 
-// const shareUrl = `${window.location.origin}${window.location.pathname}?journey=${shareData}`;
+    // console.log("inside openShareExploreModal, shareData:", this.geohop.hops);
 
-// const shareLinkEl = document.getElementById('shareExploreLink');
-// if (shareLinkEl) shareLinkEl.value = shareUrl;
+    // const shareUrl = `${window.location.origin}${window.location.pathname}?journey=${shareData}`;
 
-///
-const modal = document.getElementById('shareExploreModal');
+    // const shareLinkEl = document.getElementById('shareExploreLink');
+    // if (shareLinkEl) shareLinkEl.value = shareUrl;
+
+    ///
+    const modal = document.getElementById('shareExploreModal');
     modal?.classList.add('active');
 
     const journeyNameInput = document.getElementById('journeyExploreName');
@@ -87,60 +87,60 @@ const modal = document.getElementById('shareExploreModal');
       hops: this.geohop.hops,
       journeyName: defaultName
     };
-//console.log("inside openShareExploreModal, shareData:", shareData.hops, "with name:", shareData.journeyName);
+    //console.log("inside openShareExploreModal, shareData:", shareData.hops, "with name:", shareData.journeyName);
     const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(shareData))));
 
     const shareUrl = `${window.location.origin}${window.location.pathname}?journey=${encoded}`;
 
     document.getElementById('shareExploreLink').value = shareUrl;
-}
+  }
 
-closeShareExploreModal() {
-const modal = document.getElementById('shareExploreModal');
-if (modal) modal.classList.remove('active');
-}
+  closeShareExploreModal() {
+    const modal = document.getElementById('shareExploreModal');
+    if (modal) modal.classList.remove('active');
+  }
 
-copyShareExploreLink() {
-// const shareLink = document.getElementById('shareExploreLink');
-// if (shareLink) {
-// shareLink.select();
-// document.execCommand('copy');
-// //this.showNotification('Link copied! 📋', 'success');
-// }
+  copyShareExploreLink() {
+    // const shareLink = document.getElementById('shareExploreLink');
+    // if (shareLink) {
+    // shareLink.select();
+    // document.execCommand('copy');
+    // //this.showNotification('Link copied! 📋', 'success');
+    // }
 
-/////
-const journeyName = document.getElementById('journeyExploreName')?.value.trim();
- const shareLinkEl = document.getElementById('shareExploreLink');
-if (journeyName) {
-   
+    /////
     const journeyName = document.getElementById('journeyExploreName')?.value.trim();
+    const shareLinkEl = document.getElementById('shareExploreLink');
+    if (journeyName) {
 
-    const finalName = journeyName || 'Shared Journey';
+      const journeyName = document.getElementById('journeyExploreName')?.value.trim();
 
-    const shareData = {
-      hops: this.geohop.hops,
-      journeyName: finalName
-    };
-    //console.log("Copying share data:", shareData.hops, "with name:", finalName);
-    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(shareData))));
-    const finalUrl = `${window.location.origin}${window.location.pathname}?journey=${encoded}`;
+      const finalName = journeyName || 'Shared Journey';
 
-    // ✅ Update link before copying
-    if (shareLinkEl)
-    shareLinkEl.value = finalUrl;
+      const shareData = {
+        hops: this.geohop.hops,
+        journeyName: finalName
+      };
+      //console.log("Copying share data:", shareData.hops, "with name:", finalName);
+      const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(shareData))));
+      const finalUrl = `${window.location.origin}${window.location.pathname}?journey=${encoded}`;
+
+      // ✅ Update link before copying
+      if (shareLinkEl)
+        shareLinkEl.value = finalUrl;
+    }
+    if (shareLinkEl) {
+      shareLinkEl.select();
+      document.execCommand('copy');
+
+      this.geohop.showNotification(
+        journeyName
+          ? `Link copied with name: "${journeyName}" 📋`
+          : `Link copied (default name used) 📋`,
+        'success'
+      );
+    }
   }
-  if (shareLinkEl){
-    shareLinkEl.select();
-    document.execCommand('copy');
-
-    this.geohop.showNotification(
-      journeyName
-        ? `Link copied with name: "${journeyName}" 📋`
-        : `Link copied (default name used) 📋`,
-      'success'
-    );
-  }
-}
   // -----------------------------
   // WAIT FOR MAPS
   // -----------------------------
@@ -153,7 +153,7 @@ if (journeyName) {
       check();
     });
   }
-  
+
 
   // -----------------------------
   // 🔍 SEARCH (calls backend)
@@ -182,48 +182,48 @@ if (journeyName) {
       //console.log("✅ AI Results:", data);
 
       this.places = data;
-  //this.history.save(query, data);
+      //this.history.save(query, data);
       localStorage.setItem('aiExplorePlaces', JSON.stringify(this.places));
       this.renderResults(data);
       // ✅ Render history UI
-//this.history.render((selected) => {
-  //this.restoreSearch(selected);
-//});
+      //this.history.render((selected) => {
+      //this.restoreSearch(selected);
+      //});
 
     } catch (err) {
       console.error("❌ Search failed:", err);
       alert("Search failed. Check backend.");
     }
   }
-restoreSearch(selected) {
-  //console.log("🔄 Restoring:", selected.query);
+  restoreSearch(selected) {
+    //console.log("🔄 Restoring:", selected.query);
 
-  this.places = selected.results;
+    this.places = selected.results;
 
-  this.renderResults(this.places);
-  
-}
-  clearPreviousJourney() {
-  //console.log("🧹 Clearing previous journey");
+    this.renderResults(this.places);
 
-  this.places = [];
-
-  localStorage.removeItem('aiExplorePlaces');
-
-  document.getElementById('results').innerHTML = '';
-
-  // Clear map
-  if (this.geohop) {
-    this.geohop.clearExistingJourney();
   }
-}
+  clearPreviousJourney() {
+    //console.log("🧹 Clearing previous journey");
+
+    this.places = [];
+
+    localStorage.removeItem('aiExplorePlaces');
+
+    document.getElementById('results').innerHTML = '';
+
+    // Clear map
+    if (this.geohop) {
+      this.geohop.clearExistingJourney();
+    }
+  }
   // -----------------------------
   // 🎨 RENDER RESULTS (styled)
   // -----------------------------
   renderResults(places) {
-  const container = document.getElementById('results');
+    const container = document.getElementById('results');
 
-  container.innerHTML = places.map((p, i) => `
+    container.innerHTML = places.map((p, i) => `
     <div class="result-card" data-index="${i}">
       <div class="result-rank">#${i + 1}</div>
       <div class="result-content">
@@ -236,16 +236,16 @@ restoreSearch(selected) {
     </div>
   `).join('');
 
-  // ✅ ADD CLICK LISTENERS
-  document.querySelectorAll('.result-card').forEach(card => {
-    card.addEventListener('click', async () => {
-      const index = parseInt(card.dataset.index);
-      const place = this.places[index];
+    // ✅ ADD CLICK LISTENERS
+    document.querySelectorAll('.result-card').forEach(card => {
+      card.addEventListener('click', async () => {
+        const index = parseInt(card.dataset.index);
+        const place = this.places[index];
 
-      await this.focusOnPlace(place);
+        await this.focusOnPlace(place);
+      });
     });
-  });
-}
+  }
 
   // -----------------------------
   // 🌍 CONVERT AI → HOPS
@@ -267,13 +267,19 @@ restoreSearch(selected) {
 
           hops.push({
             id: Date.now() + i,
-            city: p.place,
+
+            // ✅ Correct mapping
+            place: p.place,
+            city: p.city || p.place,   // fallback if city missing
             country: p.country,
+
             lat: loc.lat(),
             lng: loc.lng(),
             altitude: 100,
-            order:i,
-            description: "AI discovered destination ✨"
+            order: i,
+
+            // ✅ use Gemini description if available
+            description: p.description || "AI discovered destination ✨"
           });
         }
 
@@ -284,45 +290,45 @@ restoreSearch(selected) {
 
     return hops;
   }
-async focusOnPlace(place) {
-  if (!this.geohop || !this.geohop.map3d) return;
+  async focusOnPlace(place) {
+    if (!this.geohop || !this.geohop.map3d) return;
 
-  const geocoder = new google.maps.Geocoder();
+    const geocoder = new google.maps.Geocoder();
 
-  try {
-    const res = await geocoder.geocode({
-      address: `${place.place}, ${place.country}`
-    });
+    try {
+      const res = await geocoder.geocode({
+        address: `${place.place}, ${place.country}`
+      });
 
-    if (!res.results[0]) return;
+      if (!res.results[0]) return;
 
-    const loc = res.results[0].geometry.location;
+      const loc = res.results[0].geometry.location;
 
-    // ✅ Same behavior as index.html
-    this.geohop.map3d.flyCameraTo({
-      endCamera: {
-        center: {
-          lat: loc.lat(),
-          lng: loc.lng(),
-          altitude: 100000
+      // ✅ Same behavior as index.html
+      this.geohop.map3d.flyCameraTo({
+        endCamera: {
+          center: {
+            lat: loc.lat(),
+            lng: loc.lng(),
+            altitude: 100000
+          },
+          tilt: 20,
+          range: 8000000
         },
-        tilt: 20,
-        range: 8000000
-      },
-      durationMillis: 2500
-    });
+        durationMillis: 2500
+      });
 
-    // ✅ Optional: show overlay like index page
-    this.geohop.showHopOverlay({
-      city: place.place,
-      country: place.country,
-      description: "AI suggested destination ✨"
-    });
+      // ✅ Optional: show overlay like index page
+      this.geohop.showHopOverlay({
+        city: place.place,
+        country: place.country,
+        description: "AI suggested destination ✨"
+      });
 
-  } catch (err) {
-    console.error("❌ Failed to focus on place:", place);
+    } catch (err) {
+      console.error("❌ Failed to focus on place:", place);
+    }
   }
-}
   // -----------------------------
   // ✈️ CREATE JOURNEY (KEY PART)
   // -----------------------------
@@ -331,7 +337,7 @@ async focusOnPlace(place) {
       alert("Search first!");
       return;
     }
- 
+
     //console.log("✈️ Creating journey...");
 
     const hops = await this.convertToHops();
@@ -352,17 +358,17 @@ async focusOnPlace(place) {
     for (let hop of hops) {
       await this.geohop.addMarker3D(hop);
     }
-document.getElementById('shareExplorationBtn').style.display = 'block';
+    document.getElementById('shareExplorationBtn').style.display = 'block';
     alert("✅ Journey ready! Click Play ▶");
-     
-  }
-setupEventListeners() {
-  // Share functionality
-document.getElementById('shareExplorationBtn')?.addEventListener('click', () => this.openShareExploreModal());
-document.getElementById('closeExploreModal')?.addEventListener('click', () => this.closeShareExploreModal());
-document.getElementById('copyExploreBtn')?.addEventListener('click', () => this.copyShareExploreLink());
 
-}
+  }
+  setupEventListeners() {
+    // Share functionality
+    document.getElementById('shareExplorationBtn')?.addEventListener('click', () => this.openShareExploreModal());
+    document.getElementById('closeExploreModal')?.addEventListener('click', () => this.closeShareExploreModal());
+    document.getElementById('copyExploreBtn')?.addEventListener('click', () => this.copyShareExploreLink());
+
+  }
   // -----------------------------
   // 📅 AUTO DATE GENERATION
   // -----------------------------

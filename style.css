@@ -705,7 +705,7 @@ gmp-marker-3d {
 #results {
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 6px;
 }
 
 /* Card */
@@ -713,12 +713,12 @@ gmp-marker-3d {
   display: flex;
   align-items: center;
   background: white;
-  border-radius: 8px;
+  border-radius: 6px;
   padding: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   transition: all 0.2s ease;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .result-card:hover {
