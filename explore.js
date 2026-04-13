@@ -92,7 +92,7 @@ const modal = document.getElementById('shareExploreModal');
 
     const shareUrl = `${window.location.origin}${window.location.pathname}?journey=${encoded}`;
 
-    document.getElementById('shareLink').value = shareUrl;
+    document.getElementById('shareExploreLink').value = shareUrl;
 }
 
 closeShareExploreModal() {
@@ -109,7 +109,7 @@ copyShareExploreLink() {
 // }
 
 /////
-const shareLinkEl = document.getElementById('shareLink');
+const shareLinkEl = document.getElementById('shareExploreLink');
     const journeyName = document.getElementById('journeyExploreName')?.value.trim();
 
     const finalName = journeyName || 'My Journey';
