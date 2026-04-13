@@ -651,12 +651,12 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
       this.showNotification('No hops to play!', 'error');
       return;
     }
- // ✅ Enable/disable buttons correctly
-  const playBtn = document.getElementById('playBtn');
-  const pauseBtn = document.getElementById('pauseBtn');
+    // ✅ Enable/disable buttons correctly
+    const playBtn = document.getElementById('playBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
 
-  if (playBtn) playBtn.disabled = true;
-  if (pauseBtn) pauseBtn.disabled = false;
+    if (playBtn) playBtn.disabled = true;
+    if (pauseBtn) pauseBtn.disabled = false;
     // ❗ STOP any existing play loop
     this.pauseJourney();
 
@@ -1112,19 +1112,19 @@ white-space: pre-line;
         if (data.journeyName) {
 
           const journeyTitleEl = document.getElementById('journeyTitle');
+          const createJourney = document.getElementById('userName');
 
           if (journeyTitleEl) {
             journeyTitleEl.textContent = data.journeyName || 'Shared Journey';
+            const userNameEl = document.getElementById('userName');
+            userNameEl.innerHTML = `
+  Shared Journey 🌍 • 
+  <a href="index.html" target="_blank" style="margin-left:10px; text-decoration: underline;">
+    Showcase my journey ✈️
+  </a>
+`;
           }
         }
-
-        // if (headerTitle) {
-        //   headerTitle.textContent = data.journeyname || 'Shared Journey 🌍';
-        //  }
-        // const userNameEl = document.getElementById('userName');
-        // if (userNameEl) userNameEl.textContent = data.user || 'Shared Journey';
-
-
         const addHopSection = document.querySelector('.add-hop-section');
         if (addHopSection) addHopSection.style.display = 'none';
         this.showNotification('Viewing shared journey', 'info');
