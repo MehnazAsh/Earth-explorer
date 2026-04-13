@@ -170,7 +170,7 @@ class AIExplorer {
 
     try {
       this.clearPreviousJourney();
-      document.getElementById('journeyExploreName').value=query;
+      document.getElementById('journeyExploreName').textContent=query;
       const res = await fetch('/api/explore', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
