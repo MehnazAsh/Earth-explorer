@@ -170,7 +170,7 @@ class AIExplorer {
 
     try {
       this.clearPreviousJourney();
-      document.getElementById('journeyExploreName').textContent=query;
+     
       const res = await fetch('/api/explore', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -354,6 +354,8 @@ class AIExplorer {
       await this.geohop.addMarker3D(hop);
     }
     document.getElementById('shareExplorationBtn').style.display = 'block';
+        const query = document.getElementById('queryInput').value;
+ document.getElementById('journeyExploreName').textContent=query;
     alert("✅ Journey ready! Click Play ▶");
 
   }
