@@ -87,7 +87,7 @@ const modal = document.getElementById('shareExploreModal');
       hops: this.hops,
       journeyName: defaultName
     };
-
+console.log("inside openShareExploreModal, shareData:", shareData.hops, "with name:", shareData.journeyName);
     const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(shareData))));
 
     const shareUrl = `${window.location.origin}${window.location.pathname}?journey=${encoded}`;
