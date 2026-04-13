@@ -436,9 +436,9 @@ to { transform: translateX(-50%) translateY(0); opacity: 1; }
     overlay.className = 'hop-info-overlay';
     overlay.innerHTML = `
 <div style="text-align: center;">
-  <div style="font-size: 32px; margin-bottom: 10px;">📍</div>
+  <div style="font-size: 28px; margin-bottom: 10px;">📍</div>
 
-  <div style="font-size: 28px; font-weight: bold; margin-bottom: 5px;">
+  <div style="font-size: 18px; font-weight: bold; margin-bottom: 5px;">
     ${title}
   </div>
 
