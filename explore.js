@@ -84,7 +84,7 @@ const modal = document.getElementById('shareExploreModal');
     const defaultName = 'Shared Journey';
 
     const shareData = {
-      hops: this.geohophops,
+      hops: this.geohop.hops,
       journeyName: defaultName
     };
 console.log("inside openShareExploreModal, shareData:", shareData.hops, "with name:", shareData.journeyName);
