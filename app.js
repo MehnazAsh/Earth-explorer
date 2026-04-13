@@ -1108,12 +1108,12 @@ white-space: pre-line;
         const data = JSON.parse(decodeURIComponent(atob(journeyData)));
 
         this.hops = data.hops || [];
-
+        console.log("Loaded shared journey with hops:", this.hops);
         if (data.journeyName) {
 
           const journeyTitleEl = document.getElementById('journeyTitle');
           const createJourney = document.getElementById('userName');
-
+          console.log("Loaded shared journey with name:", data.journeyName);
           if (journeyTitleEl) {
             journeyTitleEl.textContent = data.journeyName || 'Shared Journey';
             const userNameEl = document.getElementById('userName');
