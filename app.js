@@ -913,7 +913,7 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
     const shareLinkEl = document.getElementById('shareLink');
     const journeyName = document.getElementById('journeyName')?.value.trim();
 
-    const finalName = journeyName || 'My Journey';
+    const finalName = journeyName || 'Shared Journey';
 
     const shareData = {
       hops: this.hops,

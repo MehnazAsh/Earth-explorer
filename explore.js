@@ -109,22 +109,27 @@ copyShareExploreLink() {
 // }
 
 /////
-const shareLinkEl = document.getElementById('shareExploreLink');
+const journeyName = document.getElementById('journeyExploreName')?.value.trim();
+ const shareLinkEl = document.getElementById('shareExploreLink');
+if (journeyName) {
+   
     const journeyName = document.getElementById('journeyExploreName')?.value.trim();
 
-    const finalName = journeyName || 'My Journey';
+    const finalName = journeyName || 'Shared Journey';
 
     const shareData = {
-      hops: this.hops,
+      hops: this.geohop.hops,
       journeyName: finalName
     };
-console.log("Copying share data:", shareData.hops, "with name:", finalName);
+    console.log("Copying share data:", shareData.hops, "with name:", finalName);
     const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(shareData))));
     const finalUrl = `${window.location.origin}${window.location.pathname}?journey=${encoded}`;
 
     // ✅ Update link before copying
+    if (shareLink)
     shareLinkEl.value = finalUrl;
-
+  }
+  if (shareLink){
     shareLinkEl.select();
     document.execCommand('copy');
 
@@ -134,6 +139,7 @@ console.log("Copying share data:", shareData.hops, "with name:", finalName);
         : `Link copied (default name used) 📋`,
       'success'
     );
+  }
 }
   // -----------------------------
   // WAIT FOR MAPS
