@@ -118,7 +118,7 @@ const shareLinkEl = document.getElementById('shareExploreLink');
       hops: this.hops,
       journeyName: finalName
     };
-
+console.log("Copying share data:", shareData.hops, "with name:", finalName);
     const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(shareData))));
     const finalUrl = `${window.location.origin}${window.location.pathname}?journey=${encoded}`;
 
