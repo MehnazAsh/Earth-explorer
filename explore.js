@@ -170,7 +170,8 @@ class AIExplorer {
 
     try {
       this.clearPreviousJourney();
-     
+      document.getElementById('journeyExploreName').textContent=query;
+      console.log("Querying backend with:", query);
       const res = await fetch('/api/explore', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
