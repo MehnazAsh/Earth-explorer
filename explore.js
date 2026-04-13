@@ -228,7 +228,10 @@ restoreSearch(selected) {
       <div class="result-rank">#${i + 1}</div>
       <div class="result-content">
         <div class="result-place">${p.place}</div>
-        <div class="result-country">${p.country}</div>
+        <div class="result-location">${p.city ? p.city + ', ' : ''}${p.country}</div>
+        <div class="result-description">
+    ✨ ${p.description}
+  </div>
       </div>
     </div>
   `).join('');
