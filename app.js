@@ -335,15 +335,15 @@ to { transform: translateX(-50%) translateY(0); opacity: 1; }
       this.showLoading(false);
     }
   }
-getMarkerLabel(hop) {
-  if (this.showPlaceInLabel && hop.place && hop.place !== hop.city) {
-    console.log("I am gna show place and city");
-    return `${hop.place}, ${hop.city}`;
-    
+  getMarkerLabel(hop) {
+    if (this.showPlaceInLabel && hop.place && hop.place !== hop.city) {
+      console.log("I am gna show place and city");
+      return `${hop.place}, ${hop.city}`;
+
+    }
+    console.log("i am gna show only city");
+    return hop.city;
   }
-  console.log("i am gna show only city");
-  return hop.city;
-}
   async addMarker3D(hop) {
     try {
       //console.log("Adding 3D marker for hop:");
@@ -374,10 +374,10 @@ getMarkerLabel(hop) {
         marker.altitudeMode = 'RELATIVE_TO_GROUND';
         marker.extruded = true;
         marker.label = `📍 ${this.getMarkerLabel(hop)}`,
-        // Add click listener
-        marker.addEventListener('click', () => {
-          this.focusOnHop(hop);
-        });
+          // Add click listener
+          marker.addEventListener('click', () => {
+            this.focusOnHop(hop);
+          });
         this.map3d.appendChild(marker);
         this.markers.push({ element: marker, hopId: hop.id, hop: hop });
         return marker;
@@ -440,8 +440,8 @@ getMarkerLabel(hop) {
     }
     const overlay = document.createElement('div');
     const title = hop.place && hop.place.trim()
-  ? `${hop.place}, ${hop.city}`
-  : `${hop.city}, ${hop.country}`;
+      ? `${hop.place}, ${hop.city}`
+      : `${hop.city}, ${hop.country}`;
     overlay.className = 'hop-info-overlay';
     overlay.innerHTML = `
 <div style="text-align: center;">
@@ -451,17 +451,15 @@ getMarkerLabel(hop) {
     ${title}
   </div>
 
-  ${
-    hop.place && hop.place.trim()
-      ? `<div style="font-size: 20px; opacity: 0.8; margin-bottom: 10px;">${hop.country}</div>`
-      : ''
-  }
+  ${hop.place && hop.place.trim()
+        ? `<div style="font-size: 20px; opacity: 0.8; margin-bottom: 10px;">${hop.country}</div>`
+        : ''
+      }
 
-  ${
-    hop.description
-      ? `<div style="font-size: 14px; margin-top: 10px; font-style: italic;">"${hop.description}"</div>`
-      : ''
-  }
+  ${hop.description
+        ? `<div style="font-size: 14px; margin-top: 10px; font-style: italic;">"${hop.description}"</div>`
+        : ''
+      }
 </div>
 `;
     document.body.appendChild(overlay);
@@ -703,6 +701,7 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
       let range = this.zoomConfig.default;
       if (this.currentHopIndex > 0) {
         const prevHop = sortedHops[this.currentHopIndex - 1];
+        const nextHop = sortedHops[this.currentHopIndex + 1];
         //console.log("this hop", hop.country, "prev hop", prevHop.country);
 
 
@@ -714,10 +713,21 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
             else
               range = this.zoomConfig.sameCountry;
 
-          } else {
-            range = this.zoomConfig.differentCountry;
-
           }
+        }
+
+
+        if (nextHop.country.toLowerCase() === hop.country.toLowerCase()) {
+          let dis = this.calculateDistance(hop, nextHop);
+          if (dis < 2700)
+            range = this.zoomConfig.closeCity;
+          else
+            range = this.zoomConfig.sameCountry;
+        }
+
+        else {
+          range = this.zoomConfig.differentCountry;
+
         }
       }
 
@@ -1132,7 +1142,7 @@ white-space: pre-line;
         const data = JSON.parse(decodeURIComponent(atob(journeyData)));
 
         this.hops = data.hops || [];
-       // console.log("Loaded shared journey with hops:", this.hops);
+        // console.log("Loaded shared journey with hops:", this.hops);
         if (data.journeyName) {
 
           const journeyTitleEl = document.getElementById('journeyTitle');
