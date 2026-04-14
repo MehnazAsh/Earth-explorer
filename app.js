@@ -724,6 +724,7 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
       }
 
       else{
+        console.log("I am goign to zom in for close place",this.currentHopIndex);
          const nextHop = sortedHops[this.currentHopIndex + 1];
          if (hop.country.toLowerCase() === nextHop.country.toLowerCase()) {
             let dis = this.calculateDistance(hop, nextHop);
