@@ -639,7 +639,7 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
     });
   }
   // Enhanced focusOnHop with labels
-  focusOnHop(hop, customRange = this.zoomConfig.default) {
+  focusOnHop(hop, customRange = this.zoomConfig.continent) {
     if (!this.map3d) return;
     // Show the city/country overlay
     // if (hop.photos?.length) {
@@ -772,7 +772,7 @@ getZoomLevel(prevHop, currentHop) {
   if (distance > 200) return this.zoomConfig.region;
   if (distance > 50) return this.zoomConfig.city;
   if (distance > 10) return this.zoomConfig.district;
-
+console.log(distance);
   return this.zoomConfig.landmark; // 🔥 super close
 }
 
