@@ -356,7 +356,7 @@ getMarkerLabel(hop) {
           position: { lat: hop.lat, lng: hop.lng, altitude: hop.altitude },
           altitudeMode: 'RELATIVE_TO_GROUND',
           extruded: true,
-          label: `${hop.city}`,
+          label: `${this.getMarkerLabel(hop)}`,//`${hop.city}`,
           collisionBehavior: 'OPTIONAL_AND_HIDES_LOWER_PRIORITY'
         });
         // Add click listener
