@@ -7,7 +7,7 @@ class GeoHop3D {
       default: 9000000,
       sameCountry: 3000000,
       closeCity: 2000000,
-      closePlace:1000000,
+      closePlace:666666,
       differentCountry: 8000000,
       ...options.zoomConfig
     };
@@ -1238,7 +1238,7 @@ document.addEventListener('DOMContentLoaded', () => {
         default: 9000000,
         sameCountry: 3000000,
         closeCity: 2000000,
-        closePlace:1000000,
+        closePlace:666666,
         differentCountry: 8000000
       }
     });
