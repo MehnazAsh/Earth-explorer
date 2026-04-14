@@ -337,8 +337,11 @@ to { transform: translateX(-50%) translateY(0); opacity: 1; }
   }
 getMarkerLabel(hop) {
   if (this.showPlaceInLabel && hop.place && hop.place !== hop.city) {
+    console.log("I am gna show place and city");
     return `${hop.place}, ${hop.city}`;
+    
   }
+  console.log("i am gna show only city");
   return hop.city;
 }
   async addMarker3D(hop) {
