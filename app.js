@@ -8,6 +8,7 @@ class GeoHop3D {
       sameCountry: 3000000,
       closeCity: 2000000,
       closePlace:666666,
+      nearBy:500000,
       differentCountry: 8000000,
       ...options.zoomConfig
     };
@@ -711,6 +712,7 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
         if (prevHop) {
           if (prevHop.country.toLowerCase() === hop.country.toLowerCase()) {
             let dis = this.calculateDistance(prevHop, hop);
+            console.log("Distance is ", dis);
             if(dis<900) range=this.zoomConfig.closePlace;
             if (dis>900 && dis < 2700)
               range = this.zoomConfig.closeCity;
@@ -730,6 +732,7 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
          const nextHop = sortedHops[this.currentHopIndex + 1];
          if (hop.country.toLowerCase() === nextHop.country.toLowerCase()) {
             let dis = this.calculateDistance(hop, nextHop);
+            console.log("Distance is ", dis);
             if(dis<900) range=this.zoomConfig.closePlace;
             if (dis>900 && dis < 2700)
             if (dis < 2700)
@@ -1239,6 +1242,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sameCountry: 3000000,
         closeCity: 2000000,
         closePlace:666666,
+        nearBy:500000,
         differentCountry: 8000000
       }
     });
