@@ -731,7 +731,7 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
         console.log("I am goign to zom in for close place",this.currentHopIndex);
          const nextHop = sortedHops[this.currentHopIndex + 1];
          if (hop.country.toLowerCase() === nextHop.country.toLowerCase()) {
-             range = this.getZoomLevel(prevHop, hop);
+             range = this.getZoomLevel(hop, nextHop);
           } else {
             console.log("close but diff country");
             range = this.zoomConfig.differentCountry;
