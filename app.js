@@ -732,7 +732,7 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
          const nextHop = sortedHops[this.currentHopIndex + 1];
          if (hop.country.toLowerCase() === nextHop.country.toLowerCase()) {
             let dis = this.calculateDistance(hop, nextHop);
-            console.log("Distance is ", dis);
+            console.log("country is diff and Distance is ", dis);
             if(dis<900) range=this.zoomConfig.closePlace;
             if (dis>900 && dis < 2700)
             if (dis < 2700)
@@ -741,6 +741,7 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
               range = this.zoomConfig.sameCountry;
 
           } else {
+            console.log("close but diff country");
             range = this.zoomConfig.differentCountry;
 
           }
