@@ -356,7 +356,8 @@ class AIExplorer {
     }
     document.getElementById('shareExplorationBtn').style.display = 'block';
         const query = document.getElementById('queryInput').value;
- document.getElementById('journeyExploreName').textContent=query;
+    document.getElementById('journeyExploreName').textContent=query;
+    console.log("i am trying to show query",query);
     alert("✅ Journey ready! Click Play ▶");
 
   }
