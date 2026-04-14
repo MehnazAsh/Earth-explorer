@@ -4,12 +4,13 @@ class GeoHop3D {
     this.skipLoad = options.skipLoad || false;
     this.showPlaceInLabel = options.showPlaceInLabel || false;
     this.zoomConfig = {
-      default: 9000000,
-      sameCountry: 3000000,
-      closeCity: 2000000,
-      closePlace:666666,
-      nearBy:500000,
-      differentCountry: 8000000,
+       globe: 12000000,        // full earth view
+  continent: 8000000,     // cross-country / far travel
+  country: 5000000,       // same country, far cities
+  region: 2500000,        // nearby cities
+  city: 1200000,          // within city / metro
+  district: 600000,       // very close places
+  landmark: 250000,
       ...options.zoomConfig
     };
     this.map3d = null;
@@ -646,7 +647,7 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
     // }
     this.showHopOverlay(hop);
     try {
-      //console.log("I am in focusOnhop with range", customRange);
+      console.log("I am in focusOnhop with range", customRange);
       // Animate camera to hop location
       this.map3d.flyCameraTo({
         endCamera: {
@@ -711,19 +712,17 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
 
         if (prevHop) {
           if (prevHop.country.toLowerCase() === hop.country.toLowerCase()) {
-            let dis = this.calculateDistance(prevHop, hop);
-            console.log("Distance is ", dis);
-            if(dis<300) range=this.zoomConfig.nearBy;
-            if(dis > 300 && dis<900) range=this.zoomConfig.closePlace;
-            if (dis>900 && dis < 2700)
-              range = this.zoomConfig.closeCity;
-            else
-              range = this.zoomConfig.sameCountry;
+             range = this.getZoomLevel(prevHop, hop);
+            // let dis = this.calculateDistance(prevHop, hop);
+            // console.log("Distance is ", dis);
+            // if(dis<300) range=this.zoomConfig.nearBy;
+            // if(dis > 300 && dis<900) range=this.zoomConfig.closePlace;
+            // if (dis>900 && dis < 2700)
+            //   range = this.zoomConfig.closeCity;
+            // else
+            //   range = this.zoomConfig.sameCountry;
 
-          } else {
-            range = this.zoomConfig.differentCountry;
-
-          }
+          } 
         }
        
       }
@@ -732,16 +731,7 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
         console.log("I am goign to zom in for close place",this.currentHopIndex);
          const nextHop = sortedHops[this.currentHopIndex + 1];
          if (hop.country.toLowerCase() === nextHop.country.toLowerCase()) {
-            let dis = this.calculateDistance(hop, nextHop);
-            console.log("country is diff and Distance is ", dis);
-            if(dis<300) range=this.zoomConfig.nearBy;
-            if(dis>300 && dis<900) range=this.zoomConfig.closePlace;
-            if (dis>900 && dis < 2700)
-            if (dis < 2700)
-              range = this.zoomConfig.closeCity;
-            else
-              range = this.zoomConfig.sameCountry;
-
+             range = this.getZoomLevel(prevHop, hop);
           } else {
             console.log("close but diff country");
             range = this.zoomConfig.differentCountry;
@@ -769,7 +759,20 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
 
     playNextHop();
   }
+getZoomLevel(prevHop, currentHop) {
+  if (!prevHop) return this.zoomConfig.globe;
 
+  const distance = this.calculateDistance(prevHop, currentHop);
+
+  if (distance > 5000) return this.zoomConfig.globe;       // intercontinental
+  if (distance > 2000) return this.zoomConfig.continent;
+  if (distance > 800) return this.zoomConfig.country;
+  if (distance > 200) return this.zoomConfig.region;
+  if (distance > 50) return this.zoomConfig.city;
+  if (distance > 10) return this.zoomConfig.district;
+
+  return this.zoomConfig.landmark; // 🔥 super close
+}
 
 
   pauseJourney() {
@@ -1241,12 +1244,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.getElementById('addHopForm')) {
     geohop = new GeoHop3D({
       zoomConfig: {
-        default: 9000000,
-        sameCountry: 3000000,
-        closeCity: 2000000,
-        closePlace:666666,
-        nearBy:500000,
-        differentCountry: 8000000
+         globe: 12000000,        // full earth view
+  continent: 8000000,     // cross-country / far travel
+  country: 5000000,       // same country, far cities
+  region: 2500000,        // nearby cities
+  city: 1200000,          // within city / metro
+  district: 600000,       // very close places
+  landmark: 250000,
       }
     });
   }
