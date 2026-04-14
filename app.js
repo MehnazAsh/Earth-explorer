@@ -2,6 +2,7 @@
 class GeoHop3D {
   constructor(options = {}) {
     this.skipLoad = options.skipLoad || false;
+    this.showPlaceInLabel = options.showPlaceInLabel || false;
     this.zoomConfig = {
       default: 9000000,
       sameCountry: 3000000,
@@ -334,7 +335,12 @@ to { transform: translateX(-50%) translateY(0); opacity: 1; }
       this.showLoading(false);
     }
   }
-
+getMarkerLabel(hop) {
+  if (this.showPlaceInLabel && hop.place && hop.place !== hop.city) {
+    return `${hop.place}, ${hop.city}`;
+  }
+  return hop.city;
+}
   async addMarker3D(hop) {
     try {
       //console.log("Adding 3D marker for hop:");
@@ -364,7 +370,7 @@ to { transform: translateX(-50%) translateY(0); opacity: 1; }
         marker.position = { lat: hop.lat, lng: hop.lng, altitude: hop.altitude };
         marker.altitudeMode = 'RELATIVE_TO_GROUND';
         marker.extruded = true;
-        marker.label = `📍 ${hop.city}`;
+        marker.label = `📍 ${this.getMarkerLabel(hop)}`,
         // Add click listener
         marker.addEventListener('click', () => {
           this.focusOnHop(hop);

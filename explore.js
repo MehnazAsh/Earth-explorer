@@ -18,7 +18,7 @@ class AIExplorer {
     await this.waitForMaps();
     this.setupEventListeners();
     // Initialize your EXISTING GeoHop engine
-    this.geohop = new GeoHop3D({ skipLoad: true });
+    this.geohop = new GeoHop3D({ skipLoad: true, showPlaceInLabel: true  });
     // ✅ Pre-fill search box with last query
     const history = JSON.parse(localStorage.getItem('aiSearchHistory') || "[]");
     const lastQuery = history[0]?.query || "";
