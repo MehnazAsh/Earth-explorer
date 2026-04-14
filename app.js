@@ -713,7 +713,8 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
           if (prevHop.country.toLowerCase() === hop.country.toLowerCase()) {
             let dis = this.calculateDistance(prevHop, hop);
             console.log("Distance is ", dis);
-            if(dis<900) range=this.zoomConfig.closePlace;
+            if(dis<300) range=this.zoomConfig.nearBy;
+            if(dis > 300 && dis<900) range=this.zoomConfig.closePlace;
             if (dis>900 && dis < 2700)
               range = this.zoomConfig.closeCity;
             else
@@ -733,7 +734,8 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
          if (hop.country.toLowerCase() === nextHop.country.toLowerCase()) {
             let dis = this.calculateDistance(hop, nextHop);
             console.log("country is diff and Distance is ", dis);
-            if(dis<900) range=this.zoomConfig.closePlace;
+            if(dis<300) range=this.zoomConfig.nearBy;
+            if(dis>300 && dis<900) range=this.zoomConfig.closePlace;
             if (dis>900 && dis < 2700)
             if (dis < 2700)
               range = this.zoomConfig.closeCity;
