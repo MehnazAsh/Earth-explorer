@@ -768,8 +768,8 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
     if (distance > 2000) return this.zoomConfig.continent;
     if (distance > 800) return this.zoomConfig.country;
     if (distance > 200) return this.zoomConfig.region;
-    if (distance > 50) return this.zoomConfig.city;
-    if (distance > 10) return this.zoomConfig.district;
+    if (distance > 10) return this.zoomConfig.city;
+    //if (distance > 10) return this.zoomConfig.district;
     console.log(distance);
     return this.zoomConfig.landmark; // 🔥 super close
   }
