@@ -18,7 +18,7 @@ class AIExplorer {
     await this.waitForMaps();
     this.setupEventListeners();
     // Initialize your EXISTING GeoHop engine
-    this.geohop = new GeoHop3D({ skipLoad: true, showPlaceInLabel: true  });
+    this.geohop = new GeoHop3D({ skipLoad: true, showPlaceInLabel: true });
     // ✅ Pre-fill search box with last query
     const history = JSON.parse(localStorage.getItem('aiSearchHistory') || "[]");
     const lastQuery = history[0]?.query || "";
@@ -29,30 +29,19 @@ class AIExplorer {
     const urlParams = new URLSearchParams(window.location.search);
     const journeyData = urlParams.get('journey');
     if (saved && !journeyData) {
-      console.log("🔄 Restoring previous search from localStorage...");
       this.places = JSON.parse(saved);
-
-      //console.log("🔄 Restored previous search:", this.places);
-
       this.renderResults(this.places);
-
-
     }
-    
+
     if (journeyData) {
-      //
-      console.log("I am in explore init and found journey data in URL, trying to decode and load it...");
       const dataExplore = JSON.parse(decodeURIComponent(atob(journeyData)));
 
       this.places = dataExplore.hops.map(hop => ({
-        place: hop.place,
-        city: hop.city,
+        place: hop.place || hop.city,
+        city: hop.city || hop.place,
         country: hop.country
       }));
-
       this.renderResults(this.places);
-      //
-
     }
     // Hook buttons
     document.getElementById('searchBtn')
@@ -189,7 +178,7 @@ class AIExplorer {
 
     try {
       this.clearPreviousJourney();
-      document.getElementById('journeyExploreName').textContent=query;
+      document.getElementById('journeyExploreName').textContent = query;
       console.log("Querying backend with:", query);
       const res = await fetch('/api/explore', {
         method: 'POST',
@@ -197,7 +186,7 @@ class AIExplorer {
         body: JSON.stringify({ query })
       });
       const journeyTitleEl = document.getElementById('journeyTitle');
-      journeyTitleEl.textContent =  query|| 'My Journey';
+      journeyTitleEl.textContent = query || 'My Journey';
       console.log("Inside search and ttle anme is ", query);
       const data = await res.json();
 
@@ -376,9 +365,9 @@ class AIExplorer {
       await this.geohop.addMarker3D(hop);
     }
     document.getElementById('shareExplorationBtn').style.display = 'block';
-        const query = document.getElementById('queryInput').value;
-    document.getElementById('journeyExploreName').textContent=query;
-    console.log("i am trying to show query",query);
+    const query = document.getElementById('queryInput').value;
+    document.getElementById('journeyExploreName').textContent = query;
+    console.log("i am trying to show query", query);
     alert("✅ Journey ready! Click Play ▶");
 
   }
