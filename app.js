@@ -637,7 +637,7 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
     });
   }
   // Enhanced focusOnHop with labels
-  focusOnHop(hop, customRange = this.zoomConfig.continent) {
+  focusOnHop(hop, customRange ) {
     if (!this.map3d) return;
     // Show the city/country overlay
     // if (hop.photos?.length) {
@@ -701,7 +701,7 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
       }
 
       const hop = sortedHops[this.currentHopIndex];
-      let range = this.zoomConfig.default;
+      let range = this.zoomConfig.continent; // default zoom
       if (this.currentHopIndex > 0) {
         const prevHop = sortedHops[this.currentHopIndex - 1];
 
