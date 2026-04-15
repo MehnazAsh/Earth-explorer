@@ -4,13 +4,13 @@ class GeoHop3D {
     this.skipLoad = options.skipLoad || false;
     this.showPlaceInLabel = options.showPlaceInLabel || false;
     this.zoomConfig = {
-       globe: 12000000,        // full earth view
-  continent: 8000000,     // cross-country / far travel
-  country: 5000000,       // same country, far cities
-  region: 2500000,        // nearby cities
-  city: 1200000,          // within city / metro
-  district: 600000,       // very close places
-  landmark: 250000,
+      globe: 12000000,        // full earth view
+      continent: 8000000,     // cross-country / far travel
+      country: 5000000,       // same country, far cities
+      region: 2500000,        // nearby cities
+      city: 1200000,          // within city / metro
+      district: 600000,       // very close places
+      landmark: 250000,
       ...options.zoomConfig
     };
     this.map3d = null;
@@ -338,15 +338,15 @@ to { transform: translateX(-50%) translateY(0); opacity: 1; }
       this.showLoading(false);
     }
   }
-getMarkerLabel(hop) {
-  if (this.showPlaceInLabel && hop.place && hop.place !== hop.city) {
-    console.log("I am gna show place and city");
-    return `${hop.place}, ${hop.city}`;
-    
+  getMarkerLabel(hop) {
+    if (this.showPlaceInLabel && hop.place && hop.place !== hop.city) {
+      console.log("I am gna show place and city");
+      return `${hop.place}, ${hop.city}`;
+
+    }
+    console.log("i am gna show only city");
+    return hop.city;
   }
-  console.log("i am gna show only city");
-  return hop.city;
-}
   async addMarker3D(hop) {
     try {
       //console.log("Adding 3D marker for hop:");
@@ -377,10 +377,10 @@ getMarkerLabel(hop) {
         marker.altitudeMode = 'RELATIVE_TO_GROUND';
         marker.extruded = true;
         marker.label = `📍 ${this.getMarkerLabel(hop)}`,
-        // Add click listener
-        marker.addEventListener('click', () => {
-          this.focusOnHop(hop);
-        });
+          // Add click listener
+          marker.addEventListener('click', () => {
+            this.focusOnHop(hop);
+          });
         this.map3d.appendChild(marker);
         this.markers.push({ element: marker, hopId: hop.id, hop: hop });
         return marker;
@@ -443,8 +443,8 @@ getMarkerLabel(hop) {
     }
     const overlay = document.createElement('div');
     const title = hop.place && hop.place.trim()
-  ? `${hop.place}, ${hop.city}`
-  : `${hop.city}, ${hop.country}`;
+      ? `${hop.place}, ${hop.city}`
+      : `${hop.city}, ${hop.country}`;
     overlay.className = 'hop-info-overlay';
     overlay.innerHTML = `
 <div style="text-align: center;">
@@ -454,17 +454,15 @@ getMarkerLabel(hop) {
     ${title}
   </div>
 
-  ${
-    hop.place && hop.place.trim()
-      ? `<div style="font-size: 20px; opacity: 0.8; margin-bottom: 10px;">${hop.country}</div>`
-      : ''
-  }
+  ${hop.place && hop.place.trim()
+        ? `<div style="font-size: 20px; opacity: 0.8; margin-bottom: 10px;">${hop.country}</div>`
+        : ''
+      }
 
-  ${
-    hop.description
-      ? `<div style="font-size: 14px; margin-top: 10px; font-style: italic;">"${hop.description}"</div>`
-      : ''
-  }
+  ${hop.description
+        ? `<div style="font-size: 14px; margin-top: 10px; font-style: italic;">"${hop.description}"</div>`
+        : ''
+      }
 </div>
 `;
     document.body.appendChild(overlay);
@@ -706,14 +704,14 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
       let range = this.zoomConfig.default;
       if (this.currentHopIndex > 0) {
         const prevHop = sortedHops[this.currentHopIndex - 1];
-       
+
         //console.log("this hop", hop.country, "prev hop", prevHop.country);
 
 
         if (prevHop) {
           if (prevHop.country.toLowerCase() === hop.country.toLowerCase()) {
-             range = this.getZoomLevel(prevHop, hop);
-             console.log("Range is ",range);
+            range = this.getZoomLevel(prevHop, hop);
+            console.log("Range is ", range);
             // let dis = this.calculateDistance(prevHop, hop);
             // console.log("Distance is ", dis);
             // if(dis<300) range=this.zoomConfig.nearBy;
@@ -723,22 +721,22 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
             // else
             //   range = this.zoomConfig.sameCountry;
 
-          } 
+          }
         }
-       
+
       }
 
-      else{
-        console.log("I am goign to zom in for close place",this.currentHopIndex);
-         const nextHop = sortedHops[this.currentHopIndex + 1];
-         if (hop.country.toLowerCase() === nextHop.country.toLowerCase()) {
-             range = this.getZoomLevel(hop, nextHop);
-             console.log("Range is ",range);
-          } else {
-            console.log("close but diff country");
-            range = this.zoomConfig.differentCountry;
+      else {
+        console.log("I am goign to zom in for close place", this.currentHopIndex);
+        const nextHop = sortedHops[this.currentHopIndex + 1];
+        if (hop.country.toLowerCase() === nextHop.country.toLowerCase()) {
+          range = this.getZoomLevel(hop, nextHop);
+          console.log("Range is ", range);
+        } else {
+          console.log("close but diff country");
+          range = this.zoomConfig.differentCountry;
 
-          }
+        }
 
 
       }
@@ -761,20 +759,20 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
 
     playNextHop();
   }
-getZoomLevel(prevHop, currentHop) {
-  if (!prevHop) return this.zoomConfig.globe;
+  getZoomLevel(prevHop, currentHop) {
+    if (!prevHop) return this.zoomConfig.globe;
 
-  const distance = this.calculateDistance(prevHop, currentHop);
+    const distance = this.calculateDistance(prevHop, currentHop);
 
-  if (distance > 5000) return this.zoomConfig.globe;       // intercontinental
-  if (distance > 2000) return this.zoomConfig.continent;
-  if (distance > 800) return this.zoomConfig.country;
-  if (distance > 200) return this.zoomConfig.region;
-  if (distance > 50) return this.zoomConfig.city;
-  if (distance > 10) return this.zoomConfig.district;
-console.log(distance);
-  return this.zoomConfig.landmark; // 🔥 super close
-}
+    if (distance > 5000) return this.zoomConfig.globe;       // intercontinental
+    if (distance > 2000) return this.zoomConfig.continent;
+    if (distance > 800) return this.zoomConfig.country;
+    if (distance > 200) return this.zoomConfig.region;
+    if (distance > 50) return this.zoomConfig.city;
+    if (distance > 10) return this.zoomConfig.district;
+    console.log(distance);
+    return this.zoomConfig.landmark; // 🔥 super close
+  }
 
 
   pauseJourney() {
@@ -1167,7 +1165,7 @@ white-space: pre-line;
         const data = JSON.parse(decodeURIComponent(atob(journeyData)));
 
         this.hops = data.hops || [];
-       // console.log("Loaded shared journey with hops:", this.hops);
+        // console.log("Loaded shared journey with hops:", this.hops);
         if (data.journeyName) {
 
           const journeyTitleEl = document.getElementById('journeyTitle');
@@ -1201,10 +1199,11 @@ white-space: pre-line;
             h.description?.includes("AI")
           );
 
-          if (isAIJourney) {
+          const isExplorePage = window.location.pathname.includes("explore");
+
+          if (isAIJourney && isExplorePage) {
             this.showNotification("✨ AI Journey loaded!", "info");
 
-            // Auto-play after map loads
             setTimeout(() => {
               this.playJourney();
             }, 2000);
@@ -1246,13 +1245,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.getElementById('addHopForm')) {
     geohop = new GeoHop3D({
       zoomConfig: {
-         globe: 12000000,        // full earth view
-  continent: 8000000,     // cross-country / far travel
-  country: 5000000,       // same country, far cities
-  region: 2500000,        // nearby cities
-  city: 1200000,          // within city / metro
-  district: 600000,       // very close places
-  landmark: 250000,
+        globe: 12000000,        // full earth view
+        continent: 8000000,     // cross-country / far travel
+        country: 5000000,       // same country, far cities
+        region: 2500000,        // nearby cities
+        city: 1200000,          // within city / metro
+        district: 600000,       // very close places
+        landmark: 250000,
       }
     });
   }
