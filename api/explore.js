@@ -17,7 +17,7 @@ export default async function handler(req, res) {
 
     const { query } = body || {};
 
-    console.log("📥 Query:", query);
+    //console.log("📥 Query:", query);
 
     if (!query) {
       return res.status(400).json({ error: "Query is required" });
@@ -36,7 +36,7 @@ export default async function handler(req, res) {
 
     let finalPlaces = places1 || [];
 
-    console.log("🧠 First response count:", finalPlaces.length);
+    //console.log("🧠 First response count:", finalPlaces.length);
 
     // -------------------------------
     // 🔁 RETRY if less than 10
@@ -58,7 +58,7 @@ export default async function handler(req, res) {
     const seen = new Set();
 
     for (let p of finalPlaces) {
-      const key = `${p.place}-${p.country}`;
+      const key = `${p.place}-${p.city}-${p.country}`;
       if (!seen.has(key)) {
         seen.add(key);
         unique.push(p);
@@ -71,12 +71,20 @@ export default async function handler(req, res) {
     // ✂️ LIMIT TO 10
     // -------------------------------
     finalPlaces = finalPlaces.slice(0, 10);
+    // ✅ ADD HERE
+finalPlaces = finalPlaces.map(p => ({
+  place: p.place || "",
+  city: p.city || "",
+  country: p.country || ""
+  //description: p.description || ""
+}));
 
     // -------------------------------
     // 🛟 FALLBACK if still empty
     // -------------------------------
     if (finalPlaces.length === 0) {
       console.warn("⚠️ Using fallback data");
+      //alert("⚠️ Uh Oh ! Gemini is experiencing high demand .We're  Using fallback data till in the interim.Please try bac in some time .");
       finalPlaces = getFallback();
     }
 
@@ -111,16 +119,29 @@ async function callGemini(API_KEY, query) {
               parts: [
                 {
                   text: `
-Return EXACTLY 10 travel destinations for: "${query}"
+
+Return EXACTLY 10 results for: "${query}"
 
 Rules:
-- Must return 10 items
-- Real places only
+- Results MUST match the query type strictly
+- If query is about geography (e.g. straits, rivers, mountains), return those ONLY
+- If query is about places/attractions, return landmarks
+- DO NOT return generic tourist places unless relevant to the query
+- No duplicates
+- Real-world entities only
 - No explanation
 
+Each result must include:
+- place: specific name (e.g. "Strait of Hormuz", "Eiffel Tower")
+- city: nearest major city (or empty if not applicable)
+- country: country name
 Format:
 [
-  { "place": "City", "country": "Country" }
+  {
+    "place": "Place Name",
+    "city": "City",
+    "country": "Country"
+  }
 ]
 `
                 }
@@ -133,7 +154,7 @@ Format:
 
     const data = await response.json();
 
-    console.log("🧠 Gemini raw:", data);
+    //console.log("🧠 Gemini raw:", data);
 
     let rawText = "";
 
@@ -178,14 +199,18 @@ function extractJSON(text) {
 
       if (m1) {
         places.push({
-          place: m1[1].trim(),
-          country: m1[2].trim()
-        });
-      } else if (m2) {
-        places.push({
-          place: m2[1].trim(),
-          country: m2[2].trim()
-        });
+  place: m1[1].trim(),
+  city: "",
+  country: m1[2].trim()
+  
+});
+      } 
+      else if (m2) {
+       places.push({
+  place: m1[1].trim(),
+  city: "",
+  country: m1[2].trim()
+});
       }
     }
 
@@ -201,10 +226,26 @@ function extractJSON(text) {
 // 🌍 Fallback Data
 // -------------------------------
 function getFallback() {
+  function getFallback() {
   return [
-    { place: "Bali", country: "Indonesia" },
-    { place: "Santorini", country: "Greece" },
-    { place: "Maldives", country: "Maldives" }
-   
+    {
+      place: "Bali Beaches",
+      city: "Bali",
+      country: "Indonesia",
+      //description: "Tropical beaches with vibrant culture and sunsets"
+    },
+    {
+      place: "Santorini Cliffs",
+      city: "Santorini",
+      country: "Greece",
+      //description: "Whitewashed villages overlooking stunning blue sea"
+    },
+    {
+      place: "Maldives Resorts",
+      city: "Male",
+      country: "Maldives",
+      //description: "Luxury overwater villas in crystal clear waters"
+    }
   ];
+}
 }

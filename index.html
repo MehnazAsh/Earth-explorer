@@ -13,10 +13,12 @@
             <div class="logo">
                 <span class="logo-icon">🌍</span>
                 <h1>GeoHop</h1>
+                
             </div>
+            <div><h3 id="journeyTitle" class="journey-title">My Journey</h3></div>
             <div class="user-info">
                 <span id="userName">My Journey</span>
-                <a href="/explore.html">🔍 Explore with AI</a>
+                <a href="/explore.html" class="white-link">🔍 Explore with AI</a>
                 <button class="btn-icon" id="viewModeBtn" title="Toggle View">🌐</button>
             </div>
         </header>
@@ -38,10 +40,7 @@
                                 <label for="country">Country</label>
                                 <input type="text" id="country" placeholder="e.g., France" required>
                             </div>
-                            <div class="form-group">
-                                <label for="date">Date</label>
-                                <input type="date" id="date" required>
-                            </div>
+                            
                             <div class="form-group">
                                 <label for="description">Description</label>
                                 <textarea id="description" rows="3" placeholder="What did you do there?"></textarea>
@@ -143,14 +142,17 @@
             <div class="modal-body">
                 <p>Share your travel journey with friends and family:</p>
                 <div class="share-link-container">
+                    <input type="text" id="journeyName" class="share-link" placeholder="Journey Name (optional)">
                     <input type="text" id="shareLink" readonly class="share-link">
-                    <button class="btn btn-copy" id="copyBtn">Copy</button>
+                    
+                    
                 </div>
-                <div class="share-options">
+                <div><button class="btn btn-copy" id="copyBtn">Copy</button></div>
+                <!-- <div class="share-options">
                     <button class="share-btn" id="shareWhatsApp">WhatsApp</button>
                     <button class="share-btn" id="shareTwitter">Twitter</button>
                     <button class="share-btn" id="shareFacebook">Facebook</button>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

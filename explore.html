@@ -2,25 +2,99 @@
 <html>
 <head>
   <title>GeoHop AI Explore</title>
-  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" type="text/css" href="./style.css" />
+
+   <style>
+    /* Layout fix if not already in your CSS */
+    /* .main-layout {
+      display: flex;
+      height: calc(100vh - 80px);
+    }
+
+    .sidebar {
+      width: 35%;
+      overflow-y: auto;
+      border-right: 1px solid #eee;
+      background: #fafafa;
+    } */
+
+    /* .map-container {
+      width: 65%;
+      position: relative;
+    } */
+
+    /* .map-controls {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      display: flex;
+      gap: 10px;
+      z-index: 1000;
+    } */
+
+    /* .map-controls button {
+      padding: 10px 15px;
+      border-radius: 8px;
+      border: none;
+      background: #667eea;
+      color: white;
+      cursor: pointer;
+    } */
+  </style> 
 </head>
+
 <body>
 
 <div class="app-container">
+
+  <!-- HEADER -->
   <header class="header">
-    <h1>🔍 AI Travel Explorer</h1>
+     <div class="logo">
+                <span class="logo-icon">🌍</span>
+                <h1>GeoHop</h1>
+            </div>
+            <div><h3 id="journeyTitle" class="journey-title">My Journey</h3></div>
+     <div class="user-info">
+                <span id="userName">Geo Explorer</span>
+                <a href="/index.html" class="white-link">Create my Journey</a>
+                <button class="btn-icon" id="viewModeBtn" title="Toggle View">🌐</button>
+            </div>
   </header>
 
-  <div style="padding:20px;">
-    <input id="queryInput" placeholder="e.g. most beautiful islands in the world" style="width:60%; padding:10px;" />
-    <button id="searchBtn" class="btn btn-primary">Search</button>
-  </div>
+  <div class="main-layout">
 
-  <div id="results"></div>
+    <!-- LEFT COLUMN -->
+    <aside class="sidebar">
+      <div style="padding:20px;">
 
-  <!-- reuse your existing map -->
-   <main class="map-container">
-                <gmp-map-3d 
+        <input id="queryInput"
+               placeholder="e.g. most beautiful islands in the world"
+               style="width:100%; padding:10px; font-size:16px;" />
+
+        <button id="searchBtn" class="btn btn-primary" style="margin-top:10px;">
+          Search
+        </button>
+<!-- 🕘 Recent Searches -->
+  <!-- <div id="searchHistory"></div>
+        <-- RESULTS -->
+        <div id="results" style="margin-top:20px;"></div>
+
+        <!-- CTA -->
+        <button id="createJourneyBtn" class="btn btn-primary" style="margin-top:20px;">
+          Explore on map ✈️
+        </button>
+         <button id="shareExplorationBtn" class="btn btn-primary" style="margin-top:10px; display:none;">
+  🔗 Share my exploration
+</button> 
+
+      </div> 
+    </aside>
+
+    <!-- RIGHT COLUMN -->
+    <main class="map-container">
+
+      <!-- 3D MAP -->
+    <gmp-map-3d 
                     id="map3d"
                     center="20,-10,15000000" 
                     tilt="0" 
@@ -29,15 +103,64 @@
                     mode="satellite">
                 </gmp-map-3d>
 
+      <!-- CONTROLS -->
+      <div class="map-controls">
+        <div class="control-group">
+                        <button class="control-btn" id="playBtn" title="Play Journey">
+                            <span class="icon">▶</span>
+                            <span class="label">Play</span>
+                        </button>
+                        <button class="control-btn" id="pauseBtn" title="Pause" disabled>
+                            <span class="icon">⏸</span>
+                            <span class="label">Pause</span>
+                        </button>
+                        <button class="control-btn" id="resetBtn" title="Reset">
+                            <span class="icon">⏮</span>
+                            <span class="label">Reset</span>
+                        </button>
+                    </div>
+      </div>
+       <!-- Share Modal -->
+    <div class="modal" id="shareExploreModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Share Your Journey</h2>
+                <button class="modal-close" id="closeExploreModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Share your travel journey with friends and family:</p>
+                <div class="share-link-container">
+                  <input type="text" id="journeyExploreName" placeholder="Exploration Name (optional)" class="share-link">
+                    <input type="text" id="shareExploreLink" readonly class="share-link">
+                    
+                </div>
+               <div> <button class="btn btn-copy" id="copyExploreBtn">Copy</button></div>
+                <!-- <div class="share-options">
+                    <button class="share-btn" id="shareWhatsApp">WhatsApp</button>
+                    <button class="share-btn" id="shareTwitter">Twitter</button>
+                    <button class="share-btn" id="shareFacebook">Facebook</button>
+                </div> -->
+            </div>
+        </div>
+    </div>
+
+    </main>
+
+  </div>
+
 </div>
-<button id="addToJourneyBtn" class="btn btn-primary">
-  Add to Journey ✈️
-</button>
 
 
-<script async
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBft3sI8GFrO_Mv55elA0t7zZf73EwN2bI&v=beta&libraries=maps3d,marker,geometry"></script>
-   <script src="./explore.js"></script> 
+
+<!-- Google Maps -->
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBft3sI8GFrO_Mv55elA0t7zZf73EwN2bI&v=beta&libraries=maps3d,marker,geometry">
+</script>
+  <!-- 2. Load your main engine -->
+<script  src="./app.js"></script>
+
+<!-- 3. THEN load explorer -->
+<script  src="./explore.js"></script>
 
 </body>
 </html>
