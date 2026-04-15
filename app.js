@@ -645,7 +645,6 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
     // }
     this.showHopOverlay(hop);
     try {
-      console.log("I am in focusOnhop with range", customRange);
       // Animate camera to hop location
       this.map3d.flyCameraTo({
         endCamera: {
