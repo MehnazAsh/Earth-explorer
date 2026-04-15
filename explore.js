@@ -38,22 +38,21 @@ class AIExplorer {
     }
     const urlParams = new URLSearchParams(window.location.search);
     const journeyData = urlParams.get('journey');
-//     if (journeyData) {
-//       window.addEventListener('sharedJourneyLoaded', (e) => {
-//   const hops = e.detail.hops;
+    if (journeyData && !saved) {
+      //
+      console.log("I am in explore init and found journey data in URL, trying to decode and load it...");
+      const dataExplore = JSON.parse(decodeURIComponent(atob(journeyData)));
 
-//   // Convert hops → places format
-//   this.places = hops.map(h => ({
-//     place: h.place || h.city,
-//     city: h.city,
-//     country: h.country,
-//     description: h.description || ""
-//   }));
+      this.places = dataExplore.hops.map(hop => ({
+        place: hop.place,
+        city: hop.city,
+        country: hop.country
+      }));
 
-//   // 🔥 Render in explore UI
-//   this.renderResults(this.places);
-// });
-//     }
+      this.renderResults(this.places);
+      //
+
+    }
     // Hook buttons
     document.getElementById('searchBtn')
       ?.addEventListener('click', () => this.search());
