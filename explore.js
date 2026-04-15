@@ -26,8 +26,10 @@ class AIExplorer {
     const input = document.getElementById('queryInput');
     if (input) input.value = lastQuery;
     const saved = localStorage.getItem('aiExplorePlaces');
-
-    if (saved) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const journeyData = urlParams.get('journey');
+    if (saved && !journeyData) {
+      console.log("🔄 Restoring previous search from localStorage...");
       this.places = JSON.parse(saved);
 
       //console.log("🔄 Restored previous search:", this.places);
@@ -36,8 +38,7 @@ class AIExplorer {
 
 
     }
-    const urlParams = new URLSearchParams(window.location.search);
-    const journeyData = urlParams.get('journey');
+    
     if (journeyData && !saved) {
       //
       console.log("I am in explore init and found journey data in URL, trying to decode and load it...");
