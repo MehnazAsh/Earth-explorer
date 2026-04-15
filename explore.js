@@ -34,6 +34,25 @@ class AIExplorer {
 
       this.renderResults(this.places);
 
+
+    }
+    const urlParams = new URLSearchParams(window.location.search);
+    const journeyData = urlParams.get('journey');
+    if (journeyData) {
+      window.addEventListener('sharedJourneyLoaded', (e) => {
+  const hops = e.detail.hops;
+
+  // Convert hops → places format
+  this.places = hops.map(h => ({
+    place: h.place || h.city,
+    city: h.city,
+    country: h.country,
+    description: h.description || ""
+  }));
+
+  // 🔥 Render in explore UI
+  this.renderResults(this.places);
+});
     }
     // Hook buttons
     document.getElementById('searchBtn')

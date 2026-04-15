@@ -340,11 +340,11 @@ to { transform: translateX(-50%) translateY(0); opacity: 1; }
   }
   getMarkerLabel(hop) {
     if (this.showPlaceInLabel && hop.place && hop.place !== hop.city) {
-      console.log("I am gna show place and city");
+      
       return `${hop.place}, ${hop.city}`;
 
     }
-    console.log("i am gna show only city");
+    
     return hop.city;
   }
   async addMarker3D(hop) {
@@ -354,7 +354,7 @@ to { transform: translateX(-50%) translateY(0); opacity: 1; }
       if (this.maps3dLibrary && this.maps3dLibrary.Marker3DElement) {
         // Use the new 3D marker
         const Marker3DElement = this.maps3dLibrary.Marker3DElement;
-        console.log("inside addmarker3D", hop);
+        //console.log("inside addmarker3D", hop);
         const marker = new Marker3DElement({
           position: { lat: hop.lat, lng: hop.lng, altitude: hop.altitude },
           altitudeMode: 'RELATIVE_TO_GROUND',
@@ -1181,7 +1181,13 @@ white-space: pre-line;
   </a>
 `;
           }
+          window.dispatchEvent(new CustomEvent('sharedJourneyLoaded', {
+  detail: {
+    hops: this.hops
+  }
+}));
         }
+
         const addHopSection = document.querySelector('.add-hop-section');
         if (addHopSection) addHopSection.style.display = 'none';
         this.showNotification('Viewing shared journey', 'info');
