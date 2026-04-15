@@ -177,7 +177,9 @@ class AIExplorer {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query })
       });
-
+      const journeyTitleEl = document.getElementById('journeyTitle');
+      journeyTitleEl.textContent =  query|| 'My Journey';
+      console.log("Inside search and ttle anme is ", query);
       const data = await res.json();
 
       //console.log("✅ AI Results:", data);
