@@ -754,7 +754,6 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
     if (!prevHop) return this.zoomConfig.globe;
 
     const distance = this.calculateDistance(prevHop, currentHop);
-    console.log("diatcne between the hops is ", prevHop.place + "and" + currentHop.place + " is " + distance);
     if (distance > 5000) return this.zoomConfig.globe;       // intercontinental
     if (distance > 2000) return this.zoomConfig.continent;
     if (distance > 800) return this.zoomConfig.country;
@@ -762,7 +761,6 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
     if (distance > 40) return this.zoomConfig.city;
     if (distance > 10) return this.zoomConfig.district;
     if(distance >1) return this.zoomConfig.landmark;
-    console.log(distance);
     return this.zoomConfig.landmark; // 🔥 super close
   }
 
