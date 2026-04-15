@@ -1181,11 +1181,11 @@ white-space: pre-line;
   </a>
 `;
           }
-          window.dispatchEvent(new CustomEvent('sharedJourneyLoaded', {
-  detail: {
-    hops: this.hops
-  }
-}));
+//           window.dispatchEvent(new CustomEvent('sharedJourneyLoaded', {
+//   detail: {
+//     hops: this.hops
+//   }
+// }));
         }
 
         const addHopSection = document.querySelector('.add-hop-section');
