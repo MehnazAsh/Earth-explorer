@@ -711,16 +711,8 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
         if (prevHop) {
           if (prevHop.country.toLowerCase() === hop.country.toLowerCase()) {
             range = this.getZoomLevel(prevHop, hop);
-            console.log("Range is ", range);
-            // let dis = this.calculateDistance(prevHop, hop);
-            // console.log("Distance is ", dis);
-            // if(dis<300) range=this.zoomConfig.nearBy;
-            // if(dis > 300 && dis<900) range=this.zoomConfig.closePlace;
-            // if (dis>900 && dis < 2700)
-            //   range = this.zoomConfig.closeCity;
-            // else
-            //   range = this.zoomConfig.sameCountry;
-
+            console.log("Range is ", range , "and index is ", this.currentHopIndex );
+            
           }
         }
 
