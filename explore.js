@@ -39,7 +39,7 @@ class AIExplorer {
 
     }
     
-    if (journeyData && !saved) {
+    if (journeyData) {
       //
       console.log("I am in explore init and found journey data in URL, trying to decode and load it...");
       const dataExplore = JSON.parse(decodeURIComponent(atob(journeyData)));
