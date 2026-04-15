@@ -1201,14 +1201,15 @@ white-space: pre-line;
             h.description?.includes("AI")
           );
 
-          if (isAIJourney) {
-            this.showNotification("✨ AI Journey loaded!", "info");
+          const isExplorePage = window.location.pathname.includes("explore");
 
-            // Auto-play after map loads
-            setTimeout(() => {
-              this.playJourney();
-            }, 2000);
-          }
+if (isAIJourney && isExplorePage) {
+  this.showNotification("✨ AI Journey loaded!", "info");
+
+  setTimeout(() => {
+    this.playJourney();
+  }, 2000);
+}
 
         }
         catch (e) {
