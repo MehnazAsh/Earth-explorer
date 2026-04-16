@@ -643,6 +643,7 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
     // if (hop.photos?.length) {
     //   this.openPhotoViewer(hop.photos);
     // }
+    console.log("I am inside focus on hop", hop, "and custom range is ", customRange);
     this.showHopOverlay(hop);
     try {
       // Animate camera to hop location
