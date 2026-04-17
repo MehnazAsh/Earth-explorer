@@ -4,13 +4,16 @@ class GeoHop3D {
     this.skipLoad = options.skipLoad || false;
     this.showPlaceInLabel = options.showPlaceInLabel || false;
     this.zoomConfig = {
-      globe: 12000000,        // full earth view
-      continent: 8000000,     // cross-country / far travel
-      country: 5000000,       // same country, far cities
-      region: 2500000,        // nearby cities
-      city: 1200000,          // within city / metro
-      district: 600000,       // very close places
-      landmark: 150000,
+        globe: 12000000,     // 🌍 full earth
+  continent: 8000000,  // 🌎 large regions
+  country: 4000000,    // 🇦🇺 country view
+  region: 1500000,     // state / large metro
+
+  city: 600000,        // 🏙 city overview (Sydney full view)
+  metro: 300000,       // 🚇 inner city (CBD focus)
+  district: 120000,    // 🏘 neighbourhood level
+  street: 50000,       // 🛣 streets / waterfronts
+  landmark: 20000  ,    // 📍 very tight (Opera House level)
       ...options.zoomConfig
     };
     this.map3d = null;
@@ -710,8 +713,10 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
 
         if (prevHop) {
           if (prevHop.country.toLowerCase() === hop.country.toLowerCase()) {
+          
+            if(prevHop.city.toLowerCase() === hop.city.toLowerCase()){
             range = this.getZoomLevel(prevHop, hop);
-            console.log("Range is ", range , "and index is ", this.currentHopIndex );
+            console.log("Range is ", range , "and index is ", this.currentHopIndex );}
             
           }
         }
@@ -722,11 +727,12 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
       
         const nextHop = sortedHops[this.currentHopIndex + 1];
         if (hop.country.toLowerCase() === nextHop.country.toLowerCase()) {
-          range = this.getZoomLevel(hop, nextHop);
-          console.log("Range is ", range);
+          
+          if(hop.city.toLowerCase() === nextHop.city.toLowerCase()){range = this.getZoomLevel(hop, nextHop);
+          console.log("Range is ", range);}
         } else {
           console.log("close but diff country");
-          range = this.zoomConfig.differentCountry;
+          range = this.zoomConfig.country;
 
         }
 
@@ -756,14 +762,17 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
     if (!prevHop) return this.zoomConfig.globe;
 
     const distance = this.calculateDistance(prevHop, currentHop);
-    if (distance > 5000) return this.zoomConfig.globe;       // intercontinental
-    if (distance > 2000) return this.zoomConfig.continent;
-    if (distance > 800) return this.zoomConfig.country;
-    if (distance > 200) return this.zoomConfig.region;
-    if (distance > 40) return this.zoomConfig.city;
-    if (distance > 10) return this.zoomConfig.district;
-    if(distance >1) return this.zoomConfig.landmark;
-    return this.zoomConfig.landmark; // 🔥 super close
+    if (d > 5000) return this.zoomConfig.globe;
+  if (d > 2000) return this.zoomConfig.continent;
+  if (d > 800)  return this.zoomConfig.country;
+  if (d > 200)  return this.zoomConfig.region;
+
+  if (d > 50)   return this.zoomConfig.city;
+  if (d > 15)   return this.zoomConfig.metro;
+  if (d > 5)    return this.zoomConfig.district;
+  if (d > 1)    return this.zoomConfig.street;
+
+  return this.zoomConfig.landmark;
   }
 
 
@@ -1243,14 +1252,17 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.getElementById('addHopForm')) {
     geohop = new GeoHop3D({
       zoomConfig: {
-        globe: 12000000,        // full earth view
-        continent: 8000000,     // cross-country / far travel
-        country: 5000000,       // same country, far cities
-        region: 2500000,        // nearby cities
-        city: 1200000,          // within city / metro
-        district: 600000,       // very close places
-        landmark: 150000,
-      }
+  globe: 12000000,     // 🌍 full earth
+  continent: 8000000,  // 🌎 large regions
+  country: 4000000,    // 🇦🇺 country view
+  region: 1500000,     // state / large metro
+
+  city: 600000,        // 🏙 city overview (Sydney full view)
+  metro: 300000,       // 🚇 inner city (CBD focus)
+  district: 120000,    // 🏘 neighbourhood level
+  street: 50000,       // 🛣 streets / waterfronts
+  landmark: 20000      // 📍 very tight (Opera House level)
+}
     });
   }
 
