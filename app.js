@@ -761,7 +761,7 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
   getZoomLevel(prevHop, currentHop) {
     if (!prevHop) return this.zoomConfig.globe;
 
-    const distance = this.calculateDistance(prevHop, currentHop);
+    const d = this.calculateDistance(prevHop, currentHop);
     if (d > 5000) return this.zoomConfig.globe;
   if (d > 2000) return this.zoomConfig.continent;
   if (d > 800)  return this.zoomConfig.country;
