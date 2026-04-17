@@ -716,6 +716,7 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
           
             if(prevHop.city.toLowerCase() === hop.city.toLowerCase()){
             range = this.getZoomLevel(prevHop, hop);
+      
             console.log("Range is ", range , "and index is ", this.currentHopIndex );}
             
           }
@@ -1093,7 +1094,11 @@ white-space: pre-line;
 
   saveHops() {
     try {
-      localStorage.setItem('geoHops3D', JSON.stringify(this.hops));
+      const data = {
+      hops: this.hops,
+      journeyName: document.getElementById('journeyName')?.value || "My Journey"
+    };
+      localStorage.setItem('geoHops3D', JSON.stringify(this.data));
       //console.log("I am svaing hops", this.hops)
     } catch (error) {
       //console.error('Error saving hops:', error);
@@ -1199,7 +1204,16 @@ white-space: pre-line;
       const saved = localStorage.getItem('geoHops3D');
       if (saved) {
         try {
-          this.hops = JSON.parse(saved);
+          const data = JSON.parse(saved);
+
+          this.hops = data.hops || [];
+          // ✅ SET JOURNEY NAME
+    const titleEl = document.getElementById('journeyTitle') 
+      || document.getElementById('userName');
+
+    if (titleEl) {
+      titleEl.textContent = data.journeyName || "My Journey";
+    }
 
           // ⭐ Detect AI-generated journey
           const isAIJourney = this.hops.some(h =>
