@@ -187,7 +187,7 @@ class AIExplorer {
       });
       const journeyTitleEl = document.getElementById('journeyTitle');
       journeyTitleEl.textContent = query || 'My Journey';
-      console.log("Inside search and ttle anme is ", query);
+    
       const data = await res.json();
 
       //console.log("✅ AI Results:", data);
@@ -350,7 +350,7 @@ class AIExplorer {
 
     // Inject into GeoHop engine
     this.geohop.hops = hops;
-
+    this.geohop.journeyName=this.query || "My Journey";
     // Reset existing state
     this.geohop.markers = [];
     //this.geohop.polylines = [];
