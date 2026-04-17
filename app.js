@@ -735,7 +735,7 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
 
 
       // ✅ Pass zoom to focus function
-      console.log("I am going to focus on hop with range ", range + "showing place", hop.place + " with index", this.currentHopIndex);
+      
       this.focusOnHop(hop, range);
 
       this.showNotification(
