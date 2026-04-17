@@ -10,7 +10,7 @@ class GeoHop3D {
       region: 2500000,        // nearby cities
       city: 1200000,          // within city / metro
       district: 600000,       // very close places
-      landmark: 250000,
+      landmark: 150000,
       ...options.zoomConfig
     };
     this.map3d = null;
@@ -1249,7 +1249,7 @@ document.addEventListener('DOMContentLoaded', () => {
         region: 2500000,        // nearby cities
         city: 1200000,          // within city / metro
         district: 600000,       // very close places
-        landmark: 250000,
+        landmark: 150000,
       }
     });
   }
