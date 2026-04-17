@@ -716,7 +716,7 @@ ${hop.description ? `<div class="hop-description">${hop.description}</div>` : ''
           
             if(prevHop.city.toLowerCase() === hop.city.toLowerCase()){
             range = this.getZoomLevel(prevHop, hop);
-      
+            
             console.log("Range is ", range , "and index is ", this.currentHopIndex );}
             
           }
@@ -1098,6 +1098,7 @@ white-space: pre-line;
       hops: this.hops,
       journeyName: document.getElementById('journeyName')?.value || "My Journey"
     };
+    console.log("saved title is", data.journeyName);
       localStorage.setItem('geoHops3D', JSON.stringify(this.data));
       //console.log("I am svaing hops", this.hops)
     } catch (error) {
@@ -1206,11 +1207,12 @@ white-space: pre-line;
         try {
           const data = JSON.parse(saved);
 
-          this.hops = data.hops || [];
-          // ✅ SET JOURNEY NAME
+    this.hops = data.hops || [];
+
+    // ✅ SET JOURNEY NAME
     const titleEl = document.getElementById('journeyTitle') 
       || document.getElementById('userName');
-
+          console.log("saved title is", data.journeyName)
     if (titleEl) {
       titleEl.textContent = data.journeyName || "My Journey";
     }
