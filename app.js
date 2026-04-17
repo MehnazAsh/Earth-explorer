@@ -1212,7 +1212,7 @@ white-space: pre-line;
     // ✅ SET JOURNEY NAME
     const titleEl = document.getElementById('journeyTitle') 
       || document.getElementById('userName');
-          console.log("saved title is", data.journeyName)
+          console.log("saved title is", data.journeyName);
     if (titleEl) {
       titleEl.textContent = data.journeyName || "My Journey";
     }
